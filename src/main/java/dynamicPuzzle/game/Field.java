@@ -18,7 +18,7 @@ public class Field {
         System.out.print("  ");
 
         for (int i = 0; i < field.length; i++){
-            System.out.print(i +1+ " ");
+            System.out.print(i + 1 + " ");
         }
 
         //coordinate 'x'

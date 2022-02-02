@@ -12,13 +12,13 @@ public class Game {
     private Field gameField;
     private final int size; //for field's size to match game size set in Launcher
     private boolean running;
-    private static Scanner scanner;
+    private int x, y;
 
+    private static Scanner scanner;
     private final Random random = new Random();
 
     private Piece choiceA, choiceB, choiceC;
     private Piece currentPiece;
-
 
     public Game(int size) {
         this.size = size;
@@ -34,14 +34,22 @@ public class Game {
     }
 
     private void tick() {
-        System.out.println();
-        gameField.printField();
-        updateChoices();
-        choose();
+
+        //temporary variable for testing
+        int rounds = 0;
+
+        while (rounds < 5) {
+            System.out.println();
+            gameField.printField();
+            updateChoices();
+            choose();
+            place();
+            rounds++;
+        }
     }
 
     public int getRandomID() {
-        return random.nextInt(13); //bound is tied to amount of piece ids (12)
+        return random.nextInt(5); //bound is tied to amount of piece ids (12) / currently reduced for testing!
     }
 
     public void updateChoices() {
@@ -109,13 +117,109 @@ public class Game {
 
     }
 
-    public void place(){
+    public void place() {
 
+        //this piece serves as 'filler' for the slots on the game field (which is a "Piece" array)
+        Piece piece = new Piece(-1); //piece without an id and thus without shape
+
+        System.out.println(">>Choose X and Y each from 1 to " + (size) + "<<");
+        System.out.println();
+
+        //x's and y's values will be reduced by 1 on order to be placed correctly.
+        //This is necessary because of how the field's coordinates are displayed for the player, beginning by 1 instead of 0 (for optical reasons)
+        //while the array's indices start with 0
+        System.out.println("X Position:");
+        y = (scanner.nextInt()) - 1;
+
+        System.out.println("Y Position:");
+        x = (scanner.nextInt()) - 1;
+
+        //when picking a choice piece in the choose method, the currentPiece object will point at the choice piece's id which is used here
         int id = currentPiece.getId();
 
-        switch (id){
-
+        switch (id) {
+            //square:
+            case 0:
+                if (isInBounds(x, x + 1) && isInBounds(y, y + 1)) {
+                    if (hasSpace(currentPiece, x, y)) {
+                        field[x][y] = piece;
+                        field[x + 1][y] = piece;
+                        field[x][y + 1] = piece;
+                        field[x + 1][y + 1] = piece;
+                    } else {
+                        System.out.println("Not enough space!");
+                        place();
+                    }
+                } else {
+                    System.out.println("Out of bounds or not enough space!");
+                    place();
+                }
+                break;
+            //column2:
+            case 1:
+                if (isInBounds(x, x + 1) && isInBounds(y, y)) {
+                    if (hasSpace(currentPiece, x, y)) {
+                        field[x][y] = piece;
+                        field[x + 1][y] = piece;
+                    } else {
+                        System.out.println("Not enough space!");
+                        place();
+                    }
+                } else {
+                    System.out.println("Out of bounds or not enough space!");
+                    place();
+                }
+                break;
+            //column3:
+            case 2:
+                if (isInBounds(x, x + 2) && isInBounds(y, y)) {
+                    if (hasSpace(currentPiece, x, y)) {
+                        field[x][y] = piece;
+                        field[x + 1][y] = piece;
+                        field[x + 2][y] = piece;
+                    } else {
+                        System.out.println("Not enough space!");
+                        place();
+                    }
+                } else {
+                    System.out.println("Out of bounds or not enough space!");
+                    place();
+                }
+                break;
+            //wall2:
+            case 3:
+                if (isInBounds(x, x) && isInBounds(y, y + 1)) {
+                    if (hasSpace(currentPiece, x, y)) {
+                        field[x][y] = piece;
+                        field[x][y + 1] = piece;
+                    } else {
+                        System.out.println("Not enough space!");
+                        place();
+                    }
+                } else {
+                    System.out.println("Out of bounds or not enough space!");
+                    place();
+                }
+                break;
+            //wall3:
+            case 4:
+                if (isInBounds(x, x) && isInBounds(y, y + 2)) {
+                    if (hasSpace(currentPiece, x, y)) {
+                        field[x][y] = piece;
+                        field[x][y + 1] = piece;
+                        field[x][y + 2] = piece;
+                    } else {
+                        System.out.println("Not enough space!");
+                        place();
+                    }
+                } else {
+                    System.out.println("Out of bounds or not enough space!");
+                    place();
+                }
+                break;
         }
+        //'clear' currentPiece
+        currentPiece = null;
     }
 
     //checks whether the piece placement is possible within the game field and will return false if the piece had to overlap the bounds
@@ -123,4 +227,58 @@ public class Game {
         return index1 >= 0 && index2 >= 0 && index1 <= field.length - 1 && index2 <= field.length - 1;
     }
 
+    //checks if indices are in bounds via isInBounds method and if the piece to place had to overlap already occupied slots on the field.
+    public boolean hasSpace(Piece piece, int x, int y) {
+
+        if (piece == null) {
+            return false;
+        }
+
+        int id = piece.getId();
+
+        switch (id) {
+            //square:
+            case 0:
+                if (isInBounds(x, x + 1) && isInBounds(y, y + 1)) {
+                    if (field[x][y] == null && field[x + 1][y] == null && field[x][y + 1] == null && field[x + 1][y + 1] == null) {
+                        return true;
+                    }
+                }
+                break;
+            //column2:
+            case 1:
+                if (isInBounds(x, x + 1) && isInBounds(y, y)) {
+                    if (field[x][y] == null && field[x + 1][y] == null) {
+                        return true;
+                    }
+                }
+                break;
+            //column3:
+            case 2:
+
+                if (isInBounds(x, x + 2) && isInBounds(y, y)) {
+                    if (field[x][y] == null && field[x + 1][y] == null && field[x + 2][y] == null) {
+                        return true;
+                    }
+                }
+                break;
+            //wall2:
+            case 3:
+                if (isInBounds(x, x) && isInBounds(y, y + 1)) {
+                    if (field[x][y] == null && field[x][y + 1] == null) {
+                        return true;
+                    }
+                }
+                break;
+            //wall3:
+            case 4:
+                if (isInBounds(x, x) && isInBounds(y, y + 2)) {
+                    if (field[x][y] == null && field[x][y + 1] == null && field[x][y + 2] == null) {
+                        return true;
+                    }
+                }
+                break;
+        }
+        return false;
+    }
 }

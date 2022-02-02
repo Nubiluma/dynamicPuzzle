@@ -128,10 +128,11 @@ public class Game {
         //x's and y's values will be reduced by 1 on order to be placed correctly.
         //This is necessary because of how the field's coordinates are displayed for the player, beginning by 1 instead of 0 (for optical reasons)
         //while the array's indices start with 0
-        System.out.println("X Position:");
+        System.out.println("'◪' is the anchor for X and Y position!");
+        System.out.println("X position:");
         y = (scanner.nextInt()) - 1;
 
-        System.out.println("Y Position:");
+        System.out.println("Y position:");
         x = (scanner.nextInt()) - 1;
 
         //when picking a choice piece in the choose method, the currentPiece object will point at the choice piece's id which is used here

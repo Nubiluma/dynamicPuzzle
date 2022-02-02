@@ -5,6 +5,8 @@ import dynamicPuzzle.object.Piece;
 import java.util.Random;
 import java.util.Scanner;
 
+import static dynamicPuzzle.game.Field.field;
+
 public class Game {
 
     private Field gameField;
@@ -15,6 +17,8 @@ public class Game {
     private final Random random = new Random();
 
     private Piece choiceA, choiceB, choiceC;
+    private Piece currentPiece;
+
 
     public Game(int size) {
         this.size = size;
@@ -83,19 +87,40 @@ public class Game {
         if (c == 1 && choiceA != null) {
             System.out.println("Chosen 1");
             System.out.println();
-            return choiceA;
+            currentPiece = choiceA;
+            choiceA = null;
+            return currentPiece;
         } else if (c == 2 && choiceB != null) {
             System.out.println("Chosen 2");
             System.out.println();
-            return choiceB;
+            currentPiece = choiceB;
+            choiceB = null;
+            return currentPiece;
         } else if (c == 3 && choiceC != null) {
             System.out.println("Chosen 3");
             System.out.println();
-            return choiceC;
+            currentPiece = choiceC;
+            choiceC = null;
+            return currentPiece;
         }
 
         System.out.println("error");
         return choose();
 
     }
+
+    public void place(){
+
+        int id = currentPiece.getId();
+
+        switch (id){
+
+        }
+    }
+
+    //checks whether the piece placement is possible within the game field and will return false if the piece had to overlap the bounds
+    public boolean isInBounds(int index1, int index2) {
+        return index1 >= 0 && index2 >= 0 && index1 <= field.length - 1 && index2 <= field.length - 1;
+    }
+
 }

@@ -35,16 +35,13 @@ public class Game {
 
     private void tick() {
 
-        //temporary variable for testing
-        int rounds = 0;
-
-        while (rounds < 5) {
+        while (running) {
             System.out.println();
             gameField.printField();
             updateChoices();
             choose();
             place();
-            rounds++;
+            checkForLose();
         }
     }
 
@@ -221,6 +218,43 @@ public class Game {
         }
         //'clear' currentPiece
         currentPiece = null;
+
+        updateChoices();
+    }
+
+    public void checkForLose() {
+
+        if (!gameFieldHasSpace()) {
+            running = false;
+            System.out.println();
+            gameField.printField();
+            System.out.println("You lose!");
+        }
+    }
+
+    //checks if available choice pieces can fit in field by calling hasSpace method for every x and y position.
+    public boolean gameFieldHasSpace() {
+
+        for (int i = 0; i < field.length; i++) {
+            for (int j = 0; j < field.length; j++) {
+                if (hasSpace(choiceA, i, j) || hasSpace(choiceB, i, j) || hasSpace(choiceC, i, j)) {
+
+                    //for testing
+                    if (!hasSpace(choiceA, i, j)) {
+                        System.out.println("Piece 1 is either null or has no space.");
+                    }
+                    if (!hasSpace(choiceB, i, j)) {
+                        System.out.println("Piece 2 is either null or has no space.");
+                    }
+                    if (!hasSpace(choiceC, i, j)) {
+                        System.out.println("Piece 3 is either null or has no space.");
+                    }
+
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     //checks whether the piece placement is possible within the game field and will return false if the piece had to overlap the bounds
@@ -231,6 +265,7 @@ public class Game {
     //checks if indices are in bounds via isInBounds method and if the piece to place had to overlap already occupied slots on the field.
     public boolean hasSpace(Piece piece, int x, int y) {
 
+        //important for gameFieldHasSpace method
         if (piece == null) {
             return false;
         }

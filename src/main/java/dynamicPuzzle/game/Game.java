@@ -42,6 +42,10 @@ public class Game {
             choose();
             place();
             checkForLose();
+
+            //for testing
+            System.out.println("Columns counted: " + countColumns());
+            System.out.println("Rows counted: " + countRows());
         }
     }
 
@@ -232,6 +236,53 @@ public class Game {
         }
     }
 
+
+    public int countColumns() {
+
+        int counter = 0;
+        int j = 0;
+        int i;
+
+        while (j < field.length) {
+
+            for (i = 0; i < field.length; i++) {
+                if (field[i][j] == null) {
+                    //jump into next row as the current column has an empty slot
+                    break;
+                } else if (i == (field.length) - 1) {
+                    //if the for loop continues until the last slot of a column, all the slots had to be filled until then and thus the column can be declared as full
+                    counter += 1;
+                }
+
+            }
+            j++;
+        }
+        return counter;
+    }
+
+    public int countRows() {
+
+        int counter = 0;
+        int i = 0;
+        int j;
+
+        while (i < field.length) {
+
+            for (j = 0; j < field.length; j++) {
+                if (field[i][j] == null) {
+                    //jump into next column as the current row has an empty slot
+                    break;
+                } else if (j == (field.length) - 1) {
+                    //if the for loop continues until the last slot of a column, all the slots had to be filled until then and thus the column can be declared as full
+                    counter += 1;
+                }
+            }
+
+            i++;
+        }
+        return counter;
+    }
+
     //checks if available choice pieces can fit in field by calling hasSpace method for every x and y position.
     public boolean gameFieldHasSpace() {
 
@@ -239,7 +290,7 @@ public class Game {
             for (int j = 0; j < field.length; j++) {
                 if (hasSpace(choiceA, i, j) || hasSpace(choiceB, i, j) || hasSpace(choiceC, i, j)) {
 
-                    //for testing
+                    /*for testing
                     if (!hasSpace(choiceA, i, j)) {
                         System.out.println("Piece 1 is either null or has no space.");
                     }
@@ -248,7 +299,7 @@ public class Game {
                     }
                     if (!hasSpace(choiceC, i, j)) {
                         System.out.println("Piece 3 is either null or has no space.");
-                    }
+                    }*/
 
                     return true;
                 }

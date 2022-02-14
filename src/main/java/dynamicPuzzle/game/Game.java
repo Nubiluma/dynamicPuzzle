@@ -50,6 +50,9 @@ public class Game {
          */
     }
 
+    /**'game loop'
+     * will run until 'running' is set to false, which will be set in 'checkForLose' method if conditions are met
+     */
     private void tick() {
 
         while (running) {
@@ -65,10 +68,17 @@ public class Game {
         }
     }
 
+    /**
+     * Picks a random integer in boundary's scope. Integer will be set as piece's id, which is unique and defined in Piece class (i.e. id '0' = 'square')
+     * @return
+     */
     public int getRandomID() {
         return random.nextInt(5); //bound is tied to amount of piece ids (12) / currently reduced for testing!
     }
 
+    /**
+     *  
+     */
     public void updateChoices() {
 
         if (choiceA == null && choiceB == null && choiceC == null) {
@@ -104,6 +114,10 @@ public class Game {
 
     }
 
+    /**
+     *
+     * @return
+     */
     public Piece choose() {
 
         System.out.println("Choose between 1 and 3!");
@@ -249,6 +263,7 @@ public class Game {
             System.out.println();
             gameField.printField();
             System.out.println("You lose!");
+            System.out.println("Total score: " + score);
         }
     }
 
@@ -322,7 +337,12 @@ public class Game {
         return counter;
     }
 
-
+    /**
+     *
+     * @param row
+     * @param a
+     * @param b
+     */
     public void mark(boolean row, int a, int b) {
 
         if (row) {
@@ -338,6 +358,9 @@ public class Game {
         }
     }
 
+    /**
+     *
+     */
     public void clearField() {
 
         for (int i = 0; i < marker.length; i++) {
@@ -350,7 +373,9 @@ public class Game {
         }
     }
 
-    //checks if available choice pieces can fit in field by calling hasSpace method for every x and y position.
+    /**
+     * checks if available choice pieces can fit in field by calling hasSpace method for every x and y position.
+     */
     public boolean gameFieldHasSpace() {
 
         for (int i = 0; i < field.length; i++) {
@@ -375,12 +400,20 @@ public class Game {
         return false;
     }
 
-    //checks whether the piece placement is possible within the game field and will return false if the piece had to overlap the bounds
+    /**
+     * checks whether the piece placement is possible within the game field and will return false if the piece had to overlap the bounds
+     */
     public boolean isInBounds(int index1, int index2) {
         return index1 >= 0 && index2 >= 0 && index1 <= field.length - 1 && index2 <= field.length - 1;
     }
 
-    //checks if indices are in bounds via isInBounds method and if the piece to place had to overlap already occupied slots on the field.
+    /**
+     * checks if indices are in bounds via isInBounds method and if the piece to place had to overlap already occupied slots on the field
+     * @param piece
+     * @param x
+     * @param y
+     * @return
+     */
     public boolean hasSpace(Piece piece, int x, int y) {
 
         //important for gameFieldHasSpace method

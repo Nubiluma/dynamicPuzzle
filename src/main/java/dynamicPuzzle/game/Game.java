@@ -11,6 +11,7 @@ public class Game {
 
     private Field gameField;
     private final int size; //for field's size to match game size set in Launcher
+    private boolean[][] marker;
     private boolean running;
     private int x, y;
 
@@ -31,6 +32,22 @@ public class Game {
         running = true;
         scanner = new Scanner(System.in);
         gameField = new Field(size);
+        marker = new boolean[size][size];
+
+        //for testing
+        /*
+        Piece testPiece = new Piece(-1);
+        for (int i = 0; i < field.length; i++) {
+            field[i][0] = testPiece;
+            field[i][1] = testPiece;
+            field[i][2] = testPiece;
+            field[0][i] = testPiece;
+            field[1][i] = testPiece;
+            field[2][i] = testPiece;
+
+        }
+
+         */
     }
 
     private void tick() {
@@ -38,14 +55,15 @@ public class Game {
         while (running) {
             System.out.println();
             gameField.printField();
+
             updateChoices();
             choose();
             place();
-            checkForLose();
-
-            //for testing
             System.out.println("Columns counted: " + countColumns());
             System.out.println("Rows counted: " + countRows());
+            clearField();
+            checkForLose();
+
         }
     }
 
@@ -252,8 +270,9 @@ public class Game {
                 } else if (i == (field.length) - 1) {
                     //if the for loop continues until the last slot of a column, all the slots had to be filled until then and thus the column can be declared as full
                     counter += 1;
-                }
 
+                    mark(false, i, j);
+                }
             }
             j++;
         }
@@ -273,14 +292,43 @@ public class Game {
                     //jump into next column as the current row has an empty slot
                     break;
                 } else if (j == (field.length) - 1) {
-                    //if the for loop continues until the last slot of a column, all the slots had to be filled until then and thus the column can be declared as full
+                    //if the for loop continues until the last slot of a row, all the slots had to be filled until then and thus the row can be declared as full
                     counter += 1;
+
+                    mark(true, i, j);
                 }
             }
-
             i++;
         }
         return counter;
+    }
+
+    //
+    public void mark(boolean row, int a, int b) {
+
+        if (row) {
+            while (b >= 0) {
+                marker[a][b] = true;
+                b--;
+            }
+        } else {
+            while (a >= 0) {
+                marker[a][b] = true;
+                a--;
+            }
+        }
+    }
+
+    public void clearField() {
+
+        for (int i = 0; i < marker.length; i++) {
+            for (int j = 0; j < marker.length; j++) {
+                if (marker[i][j]) {
+                    field[i][j] = null;
+                    marker[i][j] = false;
+                }
+            }
+        }
     }
 
     //checks if available choice pieces can fit in field by calling hasSpace method for every x and y position.
@@ -367,5 +415,9 @@ public class Game {
                 break;
         }
         return false;
+    }
+
+    public int getSize() {
+        return size;
     }
 }

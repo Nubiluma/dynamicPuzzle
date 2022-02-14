@@ -13,7 +13,7 @@ public class Game {
     private final int size; //for field's size to match game size set in Launcher
     private boolean[][] marker;
     private boolean running;
-    private int x, y;
+    private int score = 0;
 
     private static Scanner scanner;
     private final Random random = new Random();
@@ -53,17 +53,15 @@ public class Game {
     private void tick() {
 
         while (running) {
+            System.out.println("Score: "+ score);
             System.out.println();
             gameField.printField();
-
             updateChoices();
             choose();
             place();
-            System.out.println("Columns counted: " + countColumns());
-            System.out.println("Rows counted: " + countRows());
+            evaluate();
             clearField();
             checkForLose();
-
         }
     }
 
@@ -149,10 +147,10 @@ public class Game {
         //while the array's indices start with 0
         System.out.println("'◪' is the anchor for X and Y position!");
         System.out.println("X position:");
-        y = (scanner.nextInt()) - 1;
+        int y = (scanner.nextInt()) - 1;
 
         System.out.println("Y position:");
-        x = (scanner.nextInt()) - 1;
+        int x = (scanner.nextInt()) - 1;
 
         //when picking a choice piece in the choose method, the currentPiece object will point at the choice piece's id which is used here
         int id = currentPiece.getId();
@@ -254,7 +252,23 @@ public class Game {
         }
     }
 
+    /**
+     * Will be called at the end of every round of the game. Counting methods commit amount of full rows and columns.
+     * The more rows/columns are counted at once, the higher the score (through Math.pow method)
+     */
+    public void evaluate() {
+        int counter = countColumns() + countRows();
+        if (counter != 0) {
+            score += 100 * Math.pow(counter, counter);
+            //example: 100 * 3^3 (power) => 100 * 27
+        }
+    }
 
+    /**
+     * Returns amount of columns counted to evaluate() method.
+     *
+     * @return
+     */
     public int countColumns() {
 
         int counter = 0;
@@ -279,6 +293,11 @@ public class Game {
         return counter;
     }
 
+    /**
+     * Returns amount of rows counted to evaluate() method.
+     *
+     * @return
+     */
     public int countRows() {
 
         int counter = 0;
@@ -303,7 +322,7 @@ public class Game {
         return counter;
     }
 
-    //
+
     public void mark(boolean row, int a, int b) {
 
         if (row) {
@@ -417,7 +436,4 @@ public class Game {
         return false;
     }
 
-    public int getSize() {
-        return size;
-    }
 }

@@ -6,18 +6,20 @@ public class Field {
 
     public static Piece[][] field;
 
-    public Field(int size){
+    public Field(int size) {
         field = new Piece[size][size];
     }
 
-    //prints index numbers horizontally and vertically for the player to navigate
-    //prints grid like field consisting of □s and ■s while '□' indicates an empty slot on the field
-    public void printField(){
+    /**
+     * prints index numbers horizontally and vertically for the player to navigate
+     * prints grid like field consisting of □s and ■s while '□' indicates an empty slot on the field
+     */
+    public void printField() {
 
         //for formatting reasons
         System.out.print("  ");
 
-        for (int i = 0; i < field.length; i++){
+        for (int i = 0; i < field.length; i++) {
             System.out.print(i + 1 + " ");
         }
 
@@ -25,10 +27,10 @@ public class Field {
         System.out.print("x");
         System.out.println();
 
-        for (int i = 0; i < field.length; i++){
+        for (int i = 0; i < field.length; i++) {
             System.out.print(i + 1 + " ");
             for (int j = 0; j < field.length; j++) {
-                if (field[i][j] == null){
+                if (field[i][j] == null) {
                     System.out.print("□ ");
                 } else {
                     System.out.print("■ ");

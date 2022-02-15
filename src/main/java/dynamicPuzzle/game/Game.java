@@ -50,8 +50,8 @@ public class Game {
          */
     }
 
-    /**'game loop'
-     * will run until 'running' is set to false, which will be set in 'checkForLose' method if conditions are met
+    /**
+     * "Game loop" will run until 'running' is set to false, which will be set in 'checkForLose' method if conditions are met
      */
     private void tick() {
 
@@ -77,7 +77,8 @@ public class Game {
     }
 
     /**
-     *  
+     * Generates Piece objects to choose from if all choice pieces are null. A choice piece will become null if it has been picked before by choose().
+     * So, after every third round, this method will replace all three choice pieces, because they will all be null by then.
      */
     public void updateChoices() {
 
@@ -115,8 +116,9 @@ public class Game {
     }
 
     /**
-     *
-     * @return
+     * Lets the player pick one of the three choice pieces by demanding user input through scanner. Will fail if player inputs an Integer other than 1, 2 or 3
+     * or if the choice piece is not available (null).
+     * @return currentPiece: piece's id is needed for place() method.
      */
     public Piece choose() {
 
@@ -148,6 +150,9 @@ public class Game {
 
     }
 
+    /**
+     *
+     */
     public void place() {
 
         //this piece serves as 'filler' for the slots on the game field (which is a "Piece" array)
@@ -338,7 +343,7 @@ public class Game {
     }
 
     /**
-     *
+     * Will be called by the two counting methods. 'Marks' the indices in field which have to be cleared before the next round of the game (see clearField()).
      * @param row
      * @param a
      * @param b
@@ -359,6 +364,7 @@ public class Game {
     }
 
     /**
+     * Method will clear 'marked' indices if full rows and/or columns were counted in a round.
      *
      */
     public void clearField() {
@@ -408,7 +414,7 @@ public class Game {
     }
 
     /**
-     * checks if indices are in bounds via isInBounds method and if the piece to place had to overlap already occupied slots on the field
+     * checks if indices are in bounds via isInBounds method and if the piece to place had to overlap already occupied slots on the field in order to be placed
      * @param piece
      * @param x
      * @param y

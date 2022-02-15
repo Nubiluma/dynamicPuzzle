@@ -18,67 +18,69 @@ public class Piece {
 
     private final int id;
 
-    public Piece(int id){
+    public Piece(int id) {
         this.id = id;
     }
 
-    //this method will display the choice pieces for the player when choosing turn comes
-    //'◪' represents anchor point of the piece and will not be shown on the grid when piece is placed
-    public void printPiece(Piece piece){
+    /**
+     * this method will display the choice pieces for the player when choosing turn comes
+     * '◪' represents anchor point of the piece and will not be shown on the grid when piece is placed
+     */
+    public void printPiece(Piece piece) {
 
-        if (piece.getId() == square.getId()){
+        if (piece.getId() == square.getId()) {
             System.out.println("◪ ■");
             System.out.println("■ ■");
             System.out.println();
-        } else if (piece.getId() == column2.getId()){
+        } else if (piece.getId() == column2.getId()) {
             System.out.println("◪");
             System.out.println("■");
             System.out.println();
-        } else if (piece.getId() == column3.getId()){
+        } else if (piece.getId() == column3.getId()) {
             System.out.println("◪");
             System.out.println("■");
             System.out.println("■");
             System.out.println();
-        } else if (piece.getId() == wall2.getId()){
+        } else if (piece.getId() == wall2.getId()) {
             System.out.println("◪ ■");
             System.out.println();
-        } else if (piece.getId() == wall3.getId()){
+        } else if (piece.getId() == wall3.getId()) {
             System.out.println("◪ ■ ■");
             System.out.println();
-        } else if (piece.getId() == lLeft.getId()){
+        } else if (piece.getId() == lLeft.getId()) {
             System.out.println("  ◪");
             System.out.println("  ■");
             System.out.println("■ ■");
             System.out.println();
-        } else if (piece.getId() == lRight.getId()){
+        } else if (piece.getId() == lRight.getId()) {
             System.out.println("◪");
             System.out.println("■");
             System.out.println("■ ■");
             System.out.println();
-        } else if (piece.getId() == lUpLeft.getId()){
+        } else if (piece.getId() == lUpLeft.getId()) {
             System.out.println("◪ ■");
             System.out.println("  ■");
             System.out.println("  ■");
             System.out.println();
-        } else if (piece.getId() == lUpRight.getId()){
+        } else if (piece.getId() == lUpRight.getId()) {
             System.out.println("◪ ■");
             System.out.println("■");
             System.out.println("■");
             System.out.println();
-        } else if (piece.getId() == zLeft.getId()){
+        } else if (piece.getId() == zLeft.getId()) {
             System.out.println("◪ ■");
             System.out.println("  ■ ■");
             System.out.println();
-        } else if (piece.getId() == zRight.getId()){
+        } else if (piece.getId() == zRight.getId()) {
             System.out.println("  ◪ ■");
             System.out.println("■ ■");
             System.out.println();
-        } else if (piece.getId() == zUpLeft.getId()){
+        } else if (piece.getId() == zUpLeft.getId()) {
             System.out.println("◪");
             System.out.println("■ ■");
             System.out.println("  ■");
             System.out.println();
-        } else if (piece.getId() == zUpRight.getId()){
+        } else if (piece.getId() == zUpRight.getId()) {
             System.out.println("  ◪");
             System.out.println("■ ■");
             System.out.println("■");

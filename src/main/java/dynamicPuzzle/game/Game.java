@@ -1,11 +1,10 @@
 package dynamicPuzzle.game;
 
 import dynamicPuzzle.object.Piece;
+import static dynamicPuzzle.game.Field.field;
 
 import java.util.Random;
 import java.util.Scanner;
-
-import static dynamicPuzzle.game.Field.field;
 
 public class Game {
 
@@ -33,21 +32,6 @@ public class Game {
         scanner = new Scanner(System.in);
         gameField = new Field(size);
         marker = new boolean[size][size];
-
-        //for testing
-        /*
-        Piece testPiece = new Piece(-1);
-        for (int i = 0; i < field.length; i++) {
-            field[i][0] = testPiece;
-            field[i][1] = testPiece;
-            field[i][2] = testPiece;
-            field[0][i] = testPiece;
-            field[1][i] = testPiece;
-            field[2][i] = testPiece;
-
-        }
-
-         */
     }
 
     /**
@@ -56,7 +40,7 @@ public class Game {
     private void tick() {
 
         while (running) {
-            System.out.println("Score: "+ score);
+            System.out.println(">> Score: "+ score + " <<");
             System.out.println();
             gameField.printField();
             updateChoices();
@@ -159,12 +143,12 @@ public class Game {
         Piece piece = new Piece(-1); //piece without an id and thus without shape
 
         System.out.println(">>Choose X and Y each from 1 to " + (size) + "<<");
-        System.out.println();
 
         //x's and y's values will be reduced by 1 on order to be placed correctly.
         //This is necessary because of how the field's coordinates are displayed for the player, beginning by 1 instead of 0 (for optical reasons)
         //while the array's indices start with 0
         System.out.println("'◪' is the anchor for X and Y position!");
+        System.out.println();
         System.out.println("X position:");
         int y = (scanner.nextInt()) - 1;
 

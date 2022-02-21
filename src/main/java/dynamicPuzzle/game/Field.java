@@ -10,6 +10,10 @@ public class Field {
         field = new Piece[size][size];
     }
 
+    public static Piece[][] getField() {
+        return field;
+    }
+
     /**
      * prints index numbers horizontally and vertically for the player to navigate
      * prints grid like field consisting of □s and ■s while '□' indicates an empty slot on the field

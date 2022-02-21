@@ -1,16 +1,16 @@
 package dynamicPuzzle.game;
 
 import dynamicPuzzle.object.Piece;
-import static dynamicPuzzle.game.Field.field;
+import static dynamicPuzzle.game.Field.getField;
 
 import java.util.Random;
 import java.util.Scanner;
 
 public class Game {
 
-    private Field gameField;
+    private final Field gameField;
     private final int size; //for field's size to match game size set in Launcher
-    private boolean[][] marker;
+    private final boolean[][] marker;
     private boolean running;
     private int score = 0;
 
@@ -22,16 +22,11 @@ public class Game {
 
     public Game(int size) {
         this.size = size;
-        init();
-        tick();
-    }
-
-    //method for setting up the game
-    private void init() {
         running = true;
         scanner = new Scanner(System.in);
         gameField = new Field(size);
         marker = new boolean[size][size];
+        tick();
     }
 
     /**
@@ -40,7 +35,7 @@ public class Game {
     private void tick() {
 
         while (running) {
-            System.out.println(">> Score: "+ score + " <<");
+            System.out.println(">> Score: " + score + " <<");
             System.out.println();
             gameField.printField();
             updateChoices();
@@ -54,6 +49,7 @@ public class Game {
 
     /**
      * Picks a random integer in boundary's scope. Integer will be set as piece's id, which is unique and defined in Piece class (i.e. id '0' = 'square')
+     *
      * @return
      */
     public int getRandomID() {
@@ -68,14 +64,10 @@ public class Game {
 
         if (choiceA == null && choiceB == null && choiceC == null) {
 
-            //currently testing!
-            /*choiceA = new Piece(getRandomID());
+            choiceA = new Piece(getRandomID());
             choiceB = new Piece(getRandomID());
-            choiceC = new Piece(getRandomID());*/
+            choiceC = new Piece(getRandomID());
 
-            choiceA = new Piece(5);
-            choiceB = new Piece(7);
-            choiceC = new Piece(9);
         }
 
         System.out.println("1: ");
@@ -107,6 +99,7 @@ public class Game {
     /**
      * Lets the player pick one of the three choice pieces by demanding user input through scanner. Will fail if player inputs an Integer other than 1, 2 or 3
      * or if the choice piece is not available (null).
+     *
      * @return currentPiece: piece's id is needed for place() method.
      */
     public Piece choose() {
@@ -168,10 +161,10 @@ public class Game {
             case 0:
                 if (isInBounds(x, x + 1) && isInBounds(y, y + 1)) {
                     if (hasSpace(currentPiece, x, y)) {
-                        field[x][y] = piece;
-                        field[x + 1][y] = piece;
-                        field[x][y + 1] = piece;
-                        field[x + 1][y + 1] = piece;
+                        getField()[x][y] = piece;
+                        getField()[x + 1][y] = piece;
+                        getField()[x][y + 1] = piece;
+                        getField()[x + 1][y + 1] = piece;
                     } else {
                         System.out.println("Not enough space!");
                         place();
@@ -185,8 +178,8 @@ public class Game {
             case 1:
                 if (isInBounds(x, x + 1) && isInBounds(y, y)) {
                     if (hasSpace(currentPiece, x, y)) {
-                        field[x][y] = piece;
-                        field[x + 1][y] = piece;
+                        getField()[x][y] = piece;
+                        getField()[x + 1][y] = piece;
                     } else {
                         System.out.println("Not enough space!");
                         place();
@@ -200,9 +193,9 @@ public class Game {
             case 2:
                 if (isInBounds(x, x + 2) && isInBounds(y, y)) {
                     if (hasSpace(currentPiece, x, y)) {
-                        field[x][y] = piece;
-                        field[x + 1][y] = piece;
-                        field[x + 2][y] = piece;
+                        getField()[x][y] = piece;
+                        getField()[x + 1][y] = piece;
+                        getField()[x + 2][y] = piece;
                     } else {
                         System.out.println("Not enough space!");
                         place();
@@ -216,8 +209,8 @@ public class Game {
             case 3:
                 if (isInBounds(x, x) && isInBounds(y, y + 1)) {
                     if (hasSpace(currentPiece, x, y)) {
-                        field[x][y] = piece;
-                        field[x][y + 1] = piece;
+                        getField()[x][y] = piece;
+                        getField()[x][y + 1] = piece;
                     } else {
                         System.out.println("Not enough space!");
                         place();
@@ -231,9 +224,9 @@ public class Game {
             case 4:
                 if (isInBounds(x, x) && isInBounds(y, y + 2)) {
                     if (hasSpace(currentPiece, x, y)) {
-                        field[x][y] = piece;
-                        field[x][y + 1] = piece;
-                        field[x][y + 2] = piece;
+                        getField()[x][y] = piece;
+                        getField()[x][y + 1] = piece;
+                        getField()[x][y + 2] = piece;
                     } else {
                         System.out.println("Not enough space!");
                         place();
@@ -247,10 +240,10 @@ public class Game {
             case 5:
                 if (isInBounds(x, x + 2) && isInBounds(y, y - 1)) {
                     if (hasSpace(currentPiece, x, y)) {
-                        field[x][y] = piece;
-                        field[x + 1][y] = piece;
-                        field[x + 2][y] = piece;
-                        field[x + 2][y - 1] = piece;
+                        getField()[x][y] = piece;
+                        getField()[x + 1][y] = piece;
+                        getField()[x + 2][y] = piece;
+                        getField()[x + 2][y - 1] = piece;
                     } else {
                         System.out.println("Not enough space!");
                         place();
@@ -264,10 +257,10 @@ public class Game {
             case 6:
                 if (isInBounds(x, x + 2) && isInBounds(y, y + 1)) {
                     if (hasSpace(currentPiece, x, y)) {
-                        field[x][y] = piece;
-                        field[x + 1][y] = piece;
-                        field[x + 2][y] = piece;
-                        field[x + 2][y + 1] = piece;
+                        getField()[x][y] = piece;
+                        getField()[x + 1][y] = piece;
+                        getField()[x + 2][y] = piece;
+                        getField()[x + 2][y + 1] = piece;
                     } else {
                         System.out.println("Not enough space!");
                         place();
@@ -281,10 +274,10 @@ public class Game {
             case 7:
                 if (isInBounds(x, x + 2) && isInBounds(y, y + 1)) {
                     if (hasSpace(currentPiece, x, y)) {
-                        field[x][y] = piece;
-                        field[x][y + 1] = piece;
-                        field[x + 1][y + 1] = piece;
-                        field[x + 2][y + 1] = piece;
+                        getField()[x][y] = piece;
+                        getField()[x][y + 1] = piece;
+                        getField()[x + 1][y + 1] = piece;
+                        getField()[x + 2][y + 1] = piece;
                     } else {
                         System.out.println("Not enough space!");
                         place();
@@ -298,10 +291,10 @@ public class Game {
             case 8:
                 if (isInBounds(x, x + 2) && isInBounds(y, y + 1)) {
                     if (hasSpace(currentPiece, x, y)) {
-                        field[x][y] = piece;
-                        field[x + 1][y] = piece;
-                        field[x + 2][y] = piece;
-                        field[x][y + 1] = piece;
+                        getField()[x][y] = piece;
+                        getField()[x + 1][y] = piece;
+                        getField()[x + 2][y] = piece;
+                        getField()[x][y + 1] = piece;
                     } else {
                         System.out.println("Not enough space!");
                         place();
@@ -315,10 +308,10 @@ public class Game {
             case 9:
                 if (isInBounds(x, x + 1) && isInBounds(y, y + 2)) {
                     if (hasSpace(currentPiece, x, y)) {
-                        field[x][y] = piece;
-                        field[x][y + 1] = piece;
-                        field[x + 1][y + 1] = piece;
-                        field[x + 1][y + 2] = piece;
+                        getField()[x][y] = piece;
+                        getField()[x][y + 1] = piece;
+                        getField()[x + 1][y + 1] = piece;
+                        getField()[x + 1][y + 2] = piece;
                     } else {
                         System.out.println("Not enough space!");
                         place();
@@ -332,10 +325,10 @@ public class Game {
             case 10:
                 if (isInBounds(x, x + 1) && isInBounds(y - 1, y + 1)) {
                     if (hasSpace(currentPiece, x, y)) {
-                        field[x][y] = piece;
-                        field[x][y + 1] = piece;
-                        field[x + 1][y - 1] = piece;
-                        field[x + 1][y] = piece;
+                        getField()[x][y] = piece;
+                        getField()[x][y + 1] = piece;
+                        getField()[x + 1][y - 1] = piece;
+                        getField()[x + 1][y] = piece;
                     } else {
                         System.out.println("Not enough space!");
                         place();
@@ -349,10 +342,10 @@ public class Game {
             case 11:
                 if (isInBounds(x, x + 2) && isInBounds(y, y + 1)) {
                     if (hasSpace(currentPiece, x, y)) {
-                        field[x][y] = piece;
-                        field[x + 1][y] = piece;
-                        field[x + 1][y + 1] = piece;
-                        field[x + 2][y + 1] = piece;
+                        getField()[x][y] = piece;
+                        getField()[x + 1][y] = piece;
+                        getField()[x + 1][y + 1] = piece;
+                        getField()[x + 2][y + 1] = piece;
                     } else {
                         System.out.println("Not enough space!");
                         place();
@@ -366,10 +359,10 @@ public class Game {
             case 12:
                 if (isInBounds(x, x + 2) && isInBounds(y - 1, y)) {
                     if (hasSpace(currentPiece, x, y)) {
-                        field[x][y] = piece;
-                        field[x + 1][y] = piece;
-                        field[x + 1][y - 1] = piece;
-                        field[x + 2][y - 1] = piece;
+                        getField()[x][y] = piece;
+                        getField()[x + 1][y] = piece;
+                        getField()[x + 1][y - 1] = piece;
+                        getField()[x + 2][y - 1] = piece;
                     } else {
                         System.out.println("Not enough space!");
                         place();
@@ -420,13 +413,13 @@ public class Game {
         int j = 0;
         int i;
 
-        while (j < field.length) {
+        while (j < getField().length) {
 
-            for (i = 0; i < field.length; i++) {
-                if (field[i][j] == null) {
+            for (i = 0; i < getField().length; i++) {
+                if (getField()[i][j] == null) {
                     //jump into next row as the current column has an empty slot
                     break;
-                } else if (i == (field.length) - 1) {
+                } else if (i == (getField().length) - 1) {
                     //if the for loop continues until the last slot of a column, all the slots had to be filled until then and thus the column can be declared as full
                     counter += 1;
 
@@ -449,13 +442,13 @@ public class Game {
         int i = 0;
         int j;
 
-        while (i < field.length) {
+        while (i < getField().length) {
 
-            for (j = 0; j < field.length; j++) {
-                if (field[i][j] == null) {
+            for (j = 0; j < getField().length; j++) {
+                if (getField()[i][j] == null) {
                     //jump into next column as the current row has an empty slot
                     break;
-                } else if (j == (field.length) - 1) {
+                } else if (j == (getField().length) - 1) {
                     //if the for loop continues until the last slot of a row, all the slots had to be filled until then and thus the row can be declared as full
                     counter += 1;
 
@@ -468,7 +461,8 @@ public class Game {
     }
 
     /**
-     * Will be called by the two counting methods. 'Marks' the indices in field which have to be cleared before the next round of the game (see clearField()).
+     * Will be called by the two counting methods. 'Marks' the indices in gameField which have to be cleared before the next round of the game (see clearField()).
+     *
      * @param row
      * @param a
      * @param b
@@ -490,14 +484,13 @@ public class Game {
 
     /**
      * Method will clear 'marked' indices if full rows and/or columns were counted in a round.
-     *
      */
     public void clearField() {
 
         for (int i = 0; i < marker.length; i++) {
             for (int j = 0; j < marker.length; j++) {
                 if (marker[i][j]) {
-                    field[i][j] = null;
+                    getField()[i][j] = null;
                     marker[i][j] = false;
                 }
             }
@@ -509,20 +502,9 @@ public class Game {
      */
     public boolean gameFieldHasSpace() {
 
-        for (int i = 0; i < field.length; i++) {
-            for (int j = 0; j < field.length; j++) {
+        for (int i = 0; i < getField().length; i++) {
+            for (int j = 0; j < getField().length; j++) {
                 if (hasSpace(choiceA, i, j) || hasSpace(choiceB, i, j) || hasSpace(choiceC, i, j)) {
-
-                    /*for testing
-                    if (!hasSpace(choiceA, i, j)) {
-                        System.out.println("Piece 1 is either null or has no space.");
-                    }
-                    if (!hasSpace(choiceB, i, j)) {
-                        System.out.println("Piece 2 is either null or has no space.");
-                    }
-                    if (!hasSpace(choiceC, i, j)) {
-                        System.out.println("Piece 3 is either null or has no space.");
-                    }*/
 
                     return true;
                 }
@@ -532,14 +514,15 @@ public class Game {
     }
 
     /**
-     * checks whether the piece placement is possible within the game field and will return false if the piece had to overlap the bounds
+     * checks whether the piece placement is possible within the gameField and will return false if the piece had to overlap the bounds
      */
     public boolean isInBounds(int index1, int index2) {
-        return index1 >= 0 && index2 >= 0 && index1 <= field.length - 1 && index2 <= field.length - 1;
+        return index1 >= 0 && index2 >= 0 && index1 <= getField().length - 1 && index2 <= getField().length - 1;
     }
 
     /**
      * checks if indices are in bounds via isInBounds method and if the piece to place had to overlap already occupied slots on the field in order to be placed
+     *
      * @param piece
      * @param x
      * @param y
@@ -558,7 +541,7 @@ public class Game {
             //square:
             case 0:
                 if (isInBounds(x, x + 1) && isInBounds(y, y + 1)) {
-                    if (field[x][y] == null && field[x + 1][y] == null && field[x][y + 1] == null && field[x + 1][y + 1] == null) {
+                    if (getField()[x][y] == null && getField()[x + 1][y] == null && getField()[x][y + 1] == null && getField()[x + 1][y + 1] == null) {
                         return true;
                     }
                 }
@@ -566,7 +549,7 @@ public class Game {
             //column2:
             case 1:
                 if (isInBounds(x, x + 1) && isInBounds(y, y)) {
-                    if (field[x][y] == null && field[x + 1][y] == null) {
+                    if (getField()[x][y] == null && getField()[x + 1][y] == null) {
                         return true;
                     }
                 }
@@ -575,7 +558,7 @@ public class Game {
             case 2:
 
                 if (isInBounds(x, x + 2) && isInBounds(y, y)) {
-                    if (field[x][y] == null && field[x + 1][y] == null && field[x + 2][y] == null) {
+                    if (getField()[x][y] == null && getField()[x + 1][y] == null && getField()[x + 2][y] == null) {
                         return true;
                     }
                 }
@@ -583,7 +566,7 @@ public class Game {
             //wall2:
             case 3:
                 if (isInBounds(x, x) && isInBounds(y, y + 1)) {
-                    if (field[x][y] == null && field[x][y + 1] == null) {
+                    if (getField()[x][y] == null && getField()[x][y + 1] == null) {
                         return true;
                     }
                 }
@@ -591,7 +574,7 @@ public class Game {
             //wall3:
             case 4:
                 if (isInBounds(x, x) && isInBounds(y, y + 2)) {
-                    if (field[x][y] == null && field[x][y + 1] == null && field[x][y + 2] == null) {
+                    if (getField()[x][y] == null && getField()[x][y + 1] == null && getField()[x][y + 2] == null) {
                         return true;
                     }
                 }
@@ -599,7 +582,7 @@ public class Game {
             //lLeft:
             case 5:
                 if (isInBounds(x, x + 2) && isInBounds(y, y - 1)) {
-                    if (field[x][y] == null && field[x + 1][y] == null && field[x + 2][y] == null && field[x + 2][y - 1] == null) {
+                    if (getField()[x][y] == null && getField()[x + 1][y] == null && getField()[x + 2][y] == null && getField()[x + 2][y - 1] == null) {
                         return true;
                     }
                 }
@@ -607,7 +590,7 @@ public class Game {
             //lRight:
             case 6:
                 if (isInBounds(x, x + 2) && isInBounds(y, y + 1)) {
-                    if (field[x][y] == null && field[x + 1][y] == null && field[x + 2][y] == null && field[x + 2][y + 1] == null) {
+                    if (getField()[x][y] == null && getField()[x + 1][y] == null && getField()[x + 2][y] == null && getField()[x + 2][y + 1] == null) {
                         return true;
                     }
                 }
@@ -615,7 +598,7 @@ public class Game {
             //lUpLeft:
             case 7:
                 if (isInBounds(x, x + 2) && isInBounds(y, y + 1)) {
-                    if (field[x][y] == null && field[x][y + 1] == null && field[x + 1][y + 1] == null && field[x + 2][y + 1] == null) {
+                    if (getField()[x][y] == null && getField()[x][y + 1] == null && getField()[x + 1][y + 1] == null && getField()[x + 2][y + 1] == null) {
                         return true;
                     }
                 }
@@ -623,7 +606,7 @@ public class Game {
             //lUpRight:
             case 8:
                 if (isInBounds(x, x + 2) && isInBounds(y, y + 1)) {
-                    if (field[x][y] == null && field[x][y + 1] == null && field[x + 1][y] == null && field[x + 2][y] == null) {
+                    if (getField()[x][y] == null && getField()[x][y + 1] == null && getField()[x + 1][y] == null && getField()[x + 2][y] == null) {
                         return true;
                     }
                 }
@@ -631,7 +614,7 @@ public class Game {
             //zLeft:
             case 9:
                 if (isInBounds(x, x + 1) && isInBounds(y, y + 2)) {
-                    if (field[x][y] == null && field[x][y + 1] == null && field[x + 1][y + 1] == null && field[x + 1][y + 2] == null) {
+                    if (getField()[x][y] == null && getField()[x][y + 1] == null && getField()[x + 1][y + 1] == null && getField()[x + 1][y + 2] == null) {
                         return true;
                     }
                 }
@@ -639,7 +622,7 @@ public class Game {
             //zRight:
             case 10:
                 if (isInBounds(x, x + 1) && isInBounds(y - 1, y + 1)) {
-                    if (field[x][y] == null && field[x + 1][y] == null && field[x][y + 1] == null && field[x + 1][y - 1] == null) {
+                    if (getField()[x][y] == null && getField()[x + 1][y] == null && getField()[x][y + 1] == null && getField()[x + 1][y - 1] == null) {
                         return true;
                     }
                 }
@@ -647,7 +630,7 @@ public class Game {
             //zUpLeft:
             case 11:
                 if (isInBounds(x, x + 2) && isInBounds(y, y + 1)) {
-                    if (field[x][y] == null && field[x + 1][y] == null && field[x + 1][y + 1] == null && field[x + 2][y + 1] == null) {
+                    if (getField()[x][y] == null && getField()[x + 1][y] == null && getField()[x + 1][y + 1] == null && getField()[x + 2][y + 1] == null) {
                         return true;
                     }
                 }
@@ -655,7 +638,7 @@ public class Game {
             //zUpRight:
             case 12:
                 if (isInBounds(x, x + 2) && isInBounds(y - 1, y)) {
-                    if (field[x][y] == null && field[x + 1][y] == null && field[x + 1][y - 1] == null && field[x + 2][y - 1] == null) {
+                    if (getField()[x][y] == null && getField()[x + 1][y] == null && getField()[x + 1][y - 1] == null && getField()[x + 2][y - 1] == null) {
                         return true;
                     }
                 }

@@ -6,6 +6,9 @@ public class Field {
 
     public static Piece[][] field;
 
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_WHITE = "\u001B[37m";
+
     public Field(int size) {
         field = new Piece[size][size];
     }
@@ -28,7 +31,7 @@ public class Field {
         }
 
         //coordinate 'x'
-        System.out.print("x");
+        System.out.print(ANSI_WHITE + "x" + ANSI_RESET);
         System.out.println();
 
         for (int i = 0; i < field.length; i++) {
@@ -45,7 +48,7 @@ public class Field {
             System.out.println();
         }
         //coordinate 'y'
-        System.out.println("y");
+        System.out.println(ANSI_WHITE + "y" + ANSI_RESET);
         System.out.println();
     }
 

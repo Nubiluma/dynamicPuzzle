@@ -1,6 +1,7 @@
 package dynamicPuzzle.game;
 
 import dynamicPuzzle.object.Piece;
+
 import static dynamicPuzzle.game.Field.getField;
 
 import java.util.Random;
@@ -9,10 +10,18 @@ import java.util.Scanner;
 public class Game {
 
     private final Field gameField;
-    private final int size; //for field's size to match game size set in Launcher
+    final int size;
     private final boolean[][] marker;
     private boolean running;
     private int score = 0;
+
+    //For console output coloration
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_PURPLE = "\u001B[35m";
+    public static final String ANSI_WHITE = "\u001B[37m";
 
     private static Scanner scanner;
     private final Random random = new Random();
@@ -35,7 +44,7 @@ public class Game {
     private void tick() {
 
         while (running) {
-            System.out.println(">> Score: " + score + " <<");
+            System.out.println(ANSI_YELLOW + ">> Score: " + score + " <<" + ANSI_RESET);
             System.out.println();
             gameField.printField();
             updateChoices();
@@ -74,7 +83,7 @@ public class Game {
         if (choiceA != null) {
             choiceA.printPiece(choiceA);
         } else {
-            System.out.println("N/A");
+            System.out.println("-");
             System.out.println();
         }
 
@@ -82,7 +91,7 @@ public class Game {
         if (choiceB != null) {
             choiceB.printPiece(choiceB);
         } else {
-            System.out.println("N/A");
+            System.out.println("-");
             System.out.println();
         }
 
@@ -90,7 +99,7 @@ public class Game {
         if (choiceC != null) {
             choiceC.printPiece(choiceC);
         } else {
-            System.out.println("N/A");
+            System.out.println("-");
             System.out.println();
         }
 
@@ -104,30 +113,30 @@ public class Game {
      */
     private Piece choose() {
 
-        System.out.println("Choose between 1 and 3!");
+        System.out.print(ANSI_PURPLE + "Choose between 1 and 3: " + ANSI_RESET);
         int c = scanner.nextInt();
+        System.out.println(ANSI_GREEN);
 
         if (c == 1 && choiceA != null) {
-            System.out.println("Chosen 1");
-            System.out.println();
+            System.out.println(">>You chose 1<<");
+            System.out.println(ANSI_RESET);
             currentPiece = choiceA;
             choiceA = null;
             return currentPiece;
         } else if (c == 2 && choiceB != null) {
-            System.out.println("Chosen 2");
-            System.out.println();
+            System.out.println(">>You chose 2<<");
+            System.out.println(ANSI_RESET);
             currentPiece = choiceB;
             choiceB = null;
             return currentPiece;
         } else if (c == 3 && choiceC != null) {
-            System.out.println("Chosen 3");
-            System.out.println();
+            System.out.println(">>You chose 3<<");
+            System.out.println(ANSI_RESET);
             currentPiece = choiceC;
             choiceC = null;
             return currentPiece;
         }
 
-        System.out.println("error");
         return choose();
 
     }
@@ -140,21 +149,23 @@ public class Game {
         //this piece serves as 'filler' for the slots on the game field (which is a "Piece" array)
         Piece piece = new Piece(-1); //piece without an id and thus without shape
 
-        System.out.println(">>Choose X and Y each from 1 to " + (size) + "<<");
+        System.out.println(ANSI_PURPLE + "Choose X and Y each from 1 to " + (size) + " !" + ANSI_RESET);
 
         //x's and y's values will be reduced by 1 on order to be placed correctly.
         //This is necessary because of how the field's coordinates are displayed for the player, beginning by 1 instead of 0 (for optical reasons)
         //while the array's indices start with 0
-        System.out.println("'◪' is the anchor for X and Y position!");
+        System.out.println(ANSI_WHITE + "('◪' is the anchor for X and Y position)" + ANSI_RESET);
         System.out.println();
-        System.out.println("X position:");
+        System.out.print(ANSI_PURPLE + "X position: ");
         int y = (scanner.nextInt()) - 1;
 
-        System.out.println("Y position:");
+        System.out.print("Y position: " + ANSI_RESET);
         int x = (scanner.nextInt()) - 1;
 
         //when picking a choice piece in the choose method, the currentPiece object will point at the choice piece's id which is used here
         int id = currentPiece.getId();
+
+        System.out.println(ANSI_RED); //following system outputs in this method will only show when running into an error (can all be formatted the same)
 
         switch (id) {
             //square:
@@ -376,6 +387,7 @@ public class Game {
         //'clear' currentPiece
         currentPiece = null;
 
+        System.out.print(ANSI_RESET);
         updateChoices();
     }
 
@@ -385,8 +397,8 @@ public class Game {
             running = false;
             System.out.println();
             gameField.printField();
-            System.out.println("You lose!");
-            System.out.println("Total score: " + score);
+            System.out.println(ANSI_RED + "You lose!" + ANSI_RESET);
+            System.out.println(ANSI_YELLOW + "Total score: " + score + " points!" + ANSI_RESET);
         }
     }
 
@@ -466,8 +478,8 @@ public class Game {
      * 'Marks' the indices in gameField which have to be cleared before the next round of the game.
      *
      * @param row rows and columns need to be handled differently
-     * @param a i variable
-     * @param b j variable
+     * @param a   i variable
+     * @param b   j variable
      */
     private void mark(boolean row, int a, int b) {
 
@@ -507,7 +519,6 @@ public class Game {
         for (int i = 0; i < getField().length; i++) {
             for (int j = 0; j < getField().length; j++) {
                 if (hasSpace(choiceA, i, j) || hasSpace(choiceB, i, j) || hasSpace(choiceC, i, j)) {
-
                     return true;
                 }
             }
@@ -526,13 +537,12 @@ public class Game {
      * checks if indices are in bounds and if the piece to place had to overlap occupied slots on the field in order to be placed
      *
      * @param piece id is needed because of piece's shape
-     * @param x first chosen coordinate
-     * @param y second chosen coordinate
+     * @param x     first chosen coordinate
+     * @param y     second chosen coordinate
      * @return true if piece can be placed in chosen position
      */
     private boolean hasSpace(Piece piece, int x, int y) {
 
-        //important for gameFieldHasSpace method
         if (piece == null) {
             return false;
         }

@@ -57,7 +57,7 @@ public class Game {
      * @return
      */
     public int getRandomID() {
-        return random.nextInt(5); //bound is tied to amount of piece ids (12) / currently reduced for testing!
+        return random.nextInt(13); //bound is tied to amount of piece ids (12)
     }
 
     /**
@@ -68,9 +68,14 @@ public class Game {
 
         if (choiceA == null && choiceB == null && choiceC == null) {
 
-            choiceA = new Piece(getRandomID());
+            //currently testing!
+            /*choiceA = new Piece(getRandomID());
             choiceB = new Piece(getRandomID());
-            choiceC = new Piece(getRandomID());
+            choiceC = new Piece(getRandomID());*/
+
+            choiceA = new Piece(5);
+            choiceB = new Piece(7);
+            choiceC = new Piece(9);
         }
 
         System.out.println("1: ");
@@ -229,6 +234,142 @@ public class Game {
                         field[x][y] = piece;
                         field[x][y + 1] = piece;
                         field[x][y + 2] = piece;
+                    } else {
+                        System.out.println("Not enough space!");
+                        place();
+                    }
+                } else {
+                    System.out.println("Out of bounds or not enough space!");
+                    place();
+                }
+                break;
+            //lLeft:
+            case 5:
+                if (isInBounds(x, x + 2) && isInBounds(y, y - 1)) {
+                    if (hasSpace(currentPiece, x, y)) {
+                        field[x][y] = piece;
+                        field[x + 1][y] = piece;
+                        field[x + 2][y] = piece;
+                        field[x + 2][y - 1] = piece;
+                    } else {
+                        System.out.println("Not enough space!");
+                        place();
+                    }
+                } else {
+                    System.out.println("Out of bounds or not enough space!");
+                    place();
+                }
+                break;
+            //lRight:
+            case 6:
+                if (isInBounds(x, x + 2) && isInBounds(y, y + 1)) {
+                    if (hasSpace(currentPiece, x, y)) {
+                        field[x][y] = piece;
+                        field[x + 1][y] = piece;
+                        field[x + 2][y] = piece;
+                        field[x + 2][y + 1] = piece;
+                    } else {
+                        System.out.println("Not enough space!");
+                        place();
+                    }
+                } else {
+                    System.out.println("Out of bounds or not enough space!");
+                    place();
+                }
+                break;
+            //lUpLeft:
+            case 7:
+                if (isInBounds(x, x + 2) && isInBounds(y, y + 1)) {
+                    if (hasSpace(currentPiece, x, y)) {
+                        field[x][y] = piece;
+                        field[x][y + 1] = piece;
+                        field[x + 1][y + 1] = piece;
+                        field[x + 2][y + 1] = piece;
+                    } else {
+                        System.out.println("Not enough space!");
+                        place();
+                    }
+                } else {
+                    System.out.println("Out of bounds or not enough space!");
+                    place();
+                }
+                break;
+            //lUpRight:
+            case 8:
+                if (isInBounds(x, x + 2) && isInBounds(y, y + 1)) {
+                    if (hasSpace(currentPiece, x, y)) {
+                        field[x][y] = piece;
+                        field[x + 1][y] = piece;
+                        field[x + 2][y] = piece;
+                        field[x][y + 1] = piece;
+                    } else {
+                        System.out.println("Not enough space!");
+                        place();
+                    }
+                } else {
+                    System.out.println("Out of bounds or not enough space!");
+                    place();
+                }
+                break;
+            //zLeft:
+            case 9:
+                if (isInBounds(x, x + 1) && isInBounds(y, y + 2)) {
+                    if (hasSpace(currentPiece, x, y)) {
+                        field[x][y] = piece;
+                        field[x][y + 1] = piece;
+                        field[x + 1][y + 1] = piece;
+                        field[x + 1][y + 2] = piece;
+                    } else {
+                        System.out.println("Not enough space!");
+                        place();
+                    }
+                } else {
+                    System.out.println("Out of bounds or not enough space!");
+                    place();
+                }
+                break;
+            //zRight:
+            case 10:
+                if (isInBounds(x, x + 1) && isInBounds(y - 1, y + 1)) {
+                    if (hasSpace(currentPiece, x, y)) {
+                        field[x][y] = piece;
+                        field[x][y + 1] = piece;
+                        field[x + 1][y - 1] = piece;
+                        field[x + 1][y] = piece;
+                    } else {
+                        System.out.println("Not enough space!");
+                        place();
+                    }
+                } else {
+                    System.out.println("Out of bounds or not enough space!");
+                    place();
+                }
+                break;
+            //zUpLeft:
+            case 11:
+                if (isInBounds(x, x + 2) && isInBounds(y, y + 1)) {
+                    if (hasSpace(currentPiece, x, y)) {
+                        field[x][y] = piece;
+                        field[x + 1][y] = piece;
+                        field[x + 1][y + 1] = piece;
+                        field[x + 2][y + 1] = piece;
+                    } else {
+                        System.out.println("Not enough space!");
+                        place();
+                    }
+                } else {
+                    System.out.println("Out of bounds or not enough space!");
+                    place();
+                }
+                break;
+            //zUpRight:
+            case 12:
+                if (isInBounds(x, x + 2) && isInBounds(y - 1, y)) {
+                    if (hasSpace(currentPiece, x, y)) {
+                        field[x][y] = piece;
+                        field[x + 1][y] = piece;
+                        field[x + 1][y - 1] = piece;
+                        field[x + 2][y - 1] = piece;
                     } else {
                         System.out.println("Not enough space!");
                         place();
@@ -451,6 +592,70 @@ public class Game {
             case 4:
                 if (isInBounds(x, x) && isInBounds(y, y + 2)) {
                     if (field[x][y] == null && field[x][y + 1] == null && field[x][y + 2] == null) {
+                        return true;
+                    }
+                }
+                break;
+            //lLeft:
+            case 5:
+                if (isInBounds(x, x + 2) && isInBounds(y, y - 1)) {
+                    if (field[x][y] == null && field[x + 1][y] == null && field[x + 2][y] == null && field[x + 2][y - 1] == null) {
+                        return true;
+                    }
+                }
+                break;
+            //lRight:
+            case 6:
+                if (isInBounds(x, x + 2) && isInBounds(y, y + 1)) {
+                    if (field[x][y] == null && field[x + 1][y] == null && field[x + 2][y] == null && field[x + 2][y + 1] == null) {
+                        return true;
+                    }
+                }
+                break;
+            //lUpLeft:
+            case 7:
+                if (isInBounds(x, x + 2) && isInBounds(y, y + 1)) {
+                    if (field[x][y] == null && field[x][y + 1] == null && field[x + 1][y + 1] == null && field[x + 2][y + 1] == null) {
+                        return true;
+                    }
+                }
+                break;
+            //lUpRight:
+            case 8:
+                if (isInBounds(x, x + 2) && isInBounds(y, y + 1)) {
+                    if (field[x][y] == null && field[x][y + 1] == null && field[x + 1][y] == null && field[x + 2][y] == null) {
+                        return true;
+                    }
+                }
+                break;
+            //zLeft:
+            case 9:
+                if (isInBounds(x, x + 1) && isInBounds(y, y + 2)) {
+                    if (field[x][y] == null && field[x][y + 1] == null && field[x + 1][y + 1] == null && field[x + 1][y + 2] == null) {
+                        return true;
+                    }
+                }
+                break;
+            //zRight:
+            case 10:
+                if (isInBounds(x, x + 1) && isInBounds(y - 1, y + 1)) {
+                    if (field[x][y] == null && field[x + 1][y] == null && field[x][y + 1] == null && field[x + 1][y - 1] == null) {
+                        return true;
+                    }
+                }
+                break;
+            //zUpLeft:
+            case 11:
+                if (isInBounds(x, x + 2) && isInBounds(y, y + 1)) {
+                    if (field[x][y] == null && field[x + 1][y] == null && field[x + 1][y + 1] == null && field[x + 2][y + 1] == null) {
+                        return true;
+                    }
+                }
+                break;
+            //zUpRight:
+            case 12:
+                if (isInBounds(x, x + 2) && isInBounds(y - 1, y)) {
+                    if (field[x][y] == null && field[x + 1][y] == null && field[x + 1][y - 1] == null && field[x + 2][y - 1] == null) {
                         return true;
                     }
                 }

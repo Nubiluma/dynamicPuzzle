@@ -11,11 +11,12 @@ public class Launcher {
 
     /**
      * Lets the player choose the size of the game by requesting an input.
-     * @return
+     * @return chosen game size
      */
     public static int chooseGameSize() {
 
         Scanner scanner = new Scanner(System.in);
+        System.out.println();
         System.out.println("Enter preferred size for the game.");
         System.out.println("Input equals amount of rows and columns. A minimum size of 5 is recommended.");
         System.out.println("For all inputs press enter to confirm.");

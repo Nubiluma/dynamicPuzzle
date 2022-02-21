@@ -30,7 +30,7 @@ public class Game {
     }
 
     /**
-     * "Game loop" will run until 'running' is set to false, which will be set in 'checkForLose' method if conditions are met
+     * "Game loop" will run until 'running' is set to false when loosing
      */
     private void tick() {
 
@@ -50,17 +50,17 @@ public class Game {
     /**
      * Picks a random integer in boundary's scope. Integer will be set as piece's id, which is unique and defined in Piece class (i.e. id '0' = 'square')
      *
-     * @return
+     * @return random integer for piece id
      */
-    public int getRandomID() {
+    private int getRandomID() {
         return random.nextInt(13); //bound is tied to amount of piece ids (12)
     }
 
     /**
-     * Generates Piece objects to choose from if all choice pieces are null. A choice piece will become null if it has been picked before by choose().
+     * Generates Piece objects to choose from if all choice pieces are null. A choice piece will become null if it has been picked before.
      * So, after every third round, this method will replace all three choice pieces, because they will all be null by then.
      */
-    public void updateChoices() {
+    private void updateChoices() {
 
         if (choiceA == null && choiceB == null && choiceC == null) {
 
@@ -97,12 +97,12 @@ public class Game {
     }
 
     /**
-     * Lets the player pick one of the three choice pieces by demanding user input through scanner. Will fail if player inputs an Integer other than 1, 2 or 3
+     * Lets the player pick one of the three choice pieces by demanding user input through scanner. Will fail if player inputs an integer value other than 1, 2 or 3
      * or if the choice piece is not available (null).
      *
-     * @return currentPiece: piece's id is needed for place() method.
+     * @return chosen piece
      */
-    public Piece choose() {
+    private Piece choose() {
 
         System.out.println("Choose between 1 and 3!");
         int c = scanner.nextInt();
@@ -133,9 +133,9 @@ public class Game {
     }
 
     /**
-     *
+     * 'Places' pieces on gameField by putting piece objects into array's indices.
      */
-    public void place() {
+    private void place() {
 
         //this piece serves as 'filler' for the slots on the game field (which is a "Piece" array)
         Piece piece = new Piece(-1); //piece without an id and thus without shape
@@ -379,7 +379,7 @@ public class Game {
         updateChoices();
     }
 
-    public void checkForLose() {
+    private void checkForLose() {
 
         if (!gameFieldHasSpace()) {
             running = false;
@@ -391,10 +391,10 @@ public class Game {
     }
 
     /**
-     * Will be called at the end of every round of the game. Counting methods commit amount of full rows and columns.
+     * Counting methods commit amount of full rows and columns.
      * The more rows/columns are counted at once, the higher the score (through Math.pow method)
      */
-    public void evaluate() {
+    private void evaluate() {
         int counter = countColumns() + countRows();
         if (counter != 0) {
             score += 100 * Math.pow(counter, counter);
@@ -403,11 +403,12 @@ public class Game {
     }
 
     /**
-     * Returns amount of columns counted to evaluate() method.
+     * Checks if gameField array has pieces set in every slot of a column. While loop's variable 'j' is the number of a column,
+     * for loop's 'i' is current column's indices.
      *
-     * @return
+     * @return counted columns
      */
-    public int countColumns() {
+    private int countColumns() {
 
         int counter = 0;
         int j = 0;
@@ -432,11 +433,12 @@ public class Game {
     }
 
     /**
-     * Returns amount of rows counted to evaluate() method.
+     * Checks if gameField array has pieces set in every slot of a row. While loop's variable 'j' is the number of a row,
+     * for loop's 'i' is current row's indices.
      *
-     * @return
+     * @return counted rows
      */
-    public int countRows() {
+    private int countRows() {
 
         int counter = 0;
         int i = 0;
@@ -461,13 +463,13 @@ public class Game {
     }
 
     /**
-     * Will be called by the two counting methods. 'Marks' the indices in gameField which have to be cleared before the next round of the game (see clearField()).
+     * 'Marks' the indices in gameField which have to be cleared before the next round of the game.
      *
-     * @param row
-     * @param a
-     * @param b
+     * @param row rows and columns need to be handled differently
+     * @param a i variable
+     * @param b j variable
      */
-    public void mark(boolean row, int a, int b) {
+    private void mark(boolean row, int a, int b) {
 
         if (row) {
             while (b >= 0) {
@@ -485,7 +487,7 @@ public class Game {
     /**
      * Method will clear 'marked' indices if full rows and/or columns were counted in a round.
      */
-    public void clearField() {
+    private void clearField() {
 
         for (int i = 0; i < marker.length; i++) {
             for (int j = 0; j < marker.length; j++) {
@@ -500,7 +502,7 @@ public class Game {
     /**
      * checks if available choice pieces can fit in field by calling hasSpace method for every x and y position.
      */
-    public boolean gameFieldHasSpace() {
+    private boolean gameFieldHasSpace() {
 
         for (int i = 0; i < getField().length; i++) {
             for (int j = 0; j < getField().length; j++) {
@@ -516,19 +518,19 @@ public class Game {
     /**
      * checks whether the piece placement is possible within the gameField and will return false if the piece had to overlap the bounds
      */
-    public boolean isInBounds(int index1, int index2) {
+    private boolean isInBounds(int index1, int index2) {
         return index1 >= 0 && index2 >= 0 && index1 <= getField().length - 1 && index2 <= getField().length - 1;
     }
 
     /**
-     * checks if indices are in bounds via isInBounds method and if the piece to place had to overlap already occupied slots on the field in order to be placed
+     * checks if indices are in bounds and if the piece to place had to overlap occupied slots on the field in order to be placed
      *
-     * @param piece
-     * @param x
-     * @param y
-     * @return
+     * @param piece id is needed because of piece's shape
+     * @param x first chosen coordinate
+     * @param y second chosen coordinate
+     * @return true if piece can be placed in chosen position
      */
-    public boolean hasSpace(Piece piece, int x, int y) {
+    private boolean hasSpace(Piece piece, int x, int y) {
 
         //important for gameFieldHasSpace method
         if (piece == null) {

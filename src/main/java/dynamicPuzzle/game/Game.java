@@ -29,6 +29,9 @@ public class Game {
     private Piece choiceA, choiceB, choiceC;
     private Piece currentPiece;
 
+    //this piece serves as 'filler' for the slots on the game field (which is a "Piece" array)
+    Piece piece = new Piece(-1); //piece without an id and thus without shape
+
     public Game(int size) {
         this.size = size;
         running = true;
@@ -46,6 +49,7 @@ public class Game {
         while (running) {
             System.out.println(ANSI_YELLOW + ">> Score: " + score + " <<" + ANSI_RESET);
             System.out.println();
+            placeObstacles();
             gameField.printField();
             updateChoices();
             choose();
@@ -54,6 +58,19 @@ public class Game {
             clearField();
             checkForLose();
         }
+    }
+
+    /**
+     * Method places Piece objects into random indices of Field array when starting the game. The amount of these 'obstacles' is bound to size of the array.
+     */
+    private void placeObstacles() {
+
+        Random random = new Random();
+
+        for (int i = 0; i < getField().length; i++) {
+            getField()[random.nextInt(getField().length)][random.nextInt(getField().length)] = piece;
+        }
+
     }
 
     /**
@@ -113,9 +130,16 @@ public class Game {
      */
     private Piece choose() {
 
-        System.out.print(ANSI_PURPLE + "Choose between 1 and 3: " + ANSI_RESET);
+        System.out.print(ANSI_PURPLE + "Choose between 1 and 3" + ANSI_RESET);
+        System.out.print(ANSI_WHITE + " (or enter 0 to exit the game) " + ANSI_RESET);
         int c = scanner.nextInt();
         System.out.println(ANSI_GREEN);
+
+        if (c == 0){
+            System.out.println(ANSI_GREEN + "Exiting game..." + ANSI_RESET);
+            running = false;
+            return null;
+        }
 
         if (c == 1 && choiceA != null) {
             System.out.println(">>You chose 1<<");
@@ -146,8 +170,9 @@ public class Game {
      */
     private void place() {
 
-        //this piece serves as 'filler' for the slots on the game field (which is a "Piece" array)
-        Piece piece = new Piece(-1); //piece without an id and thus without shape
+        if (!running){
+            return;
+        }
 
         System.out.println(ANSI_PURPLE + "Choose X and Y each from 1 to " + (size) + " !" + ANSI_RESET);
 
@@ -384,6 +409,7 @@ public class Game {
                 }
                 break;
         }
+
         //'clear' currentPiece
         currentPiece = null;
 
@@ -393,11 +419,13 @@ public class Game {
 
     private void checkForLose() {
 
-        if (!gameFieldHasSpace()) {
+        if (!gameFieldHasSpace() && running) {
             running = false;
             System.out.println();
             gameField.printField();
-            System.out.println(ANSI_RED + "You lose!" + ANSI_RESET);
+            System.out.println(ANSI_RED + "Game over!" + ANSI_RESET);
+            System.out.println(ANSI_YELLOW + "Total score: " + score + " points!" + ANSI_RESET);
+        } else {
             System.out.println(ANSI_YELLOW + "Total score: " + score + " points!" + ANSI_RESET);
         }
     }
@@ -407,6 +435,9 @@ public class Game {
      * The more rows/columns are counted at once, the higher the score (through Math.pow method)
      */
     private void evaluate() {
+        if (!running){
+            return;
+        }
         int counter = countColumns() + countRows();
         if (counter != 0) {
             score += 100 * Math.pow(counter, counter);

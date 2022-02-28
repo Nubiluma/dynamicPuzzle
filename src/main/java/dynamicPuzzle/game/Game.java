@@ -22,6 +22,7 @@ public class Game {
     public static final String ANSI_YELLOW = "\u001B[33m";
     public static final String ANSI_PURPLE = "\u001B[35m";
     public static final String ANSI_WHITE = "\u001B[37m";
+    public static final String ANSI_CYAN = "\u001B[36m";
 
     private static Scanner scanner;
     private final Random random = new Random();
@@ -38,6 +39,7 @@ public class Game {
         scanner = new Scanner(System.in);
         gameField = new Field(size);
         marker = new boolean[size][size];
+        placeObstacles();
         tick();
     }
 
@@ -47,9 +49,8 @@ public class Game {
     private void tick() {
 
         while (running) {
-            System.out.println(ANSI_YELLOW + ">> Score: " + score + " <<" + ANSI_RESET);
-            System.out.println();
-            placeObstacles();
+            printScore();
+            Logger.nextLine();
             gameField.printField();
             updateChoices();
             choose();
@@ -82,6 +83,9 @@ public class Game {
         return random.nextInt(13); //bound is tied to amount of piece ids (12)
     }
 
+    private void printScore(){
+        Logger.logLine(ANSI_YELLOW, ">> Score: " + score + " <<");
+    }
     /**
      * Generates Piece objects to choose from if all choice pieces are null. A choice piece will become null if it has been picked before.
      * So, after every third round, this method will replace all three choice pieces, because they will all be null by then.
@@ -130,31 +134,31 @@ public class Game {
      */
     private Piece choose() {
 
-        System.out.print(ANSI_PURPLE + "Choose between 1 and 3" + ANSI_RESET);
-        System.out.print(ANSI_WHITE + " (or enter 0 to exit the game) " + ANSI_RESET);
+        Logger.logLine(ANSI_PURPLE, "Choose between 1 and 3");
+        Logger.logLine(ANSI_WHITE, " (or enter 0 to exit the game): ");
+        Logger.nextLine();
+
         int c = scanner.nextInt();
-        System.out.println(ANSI_GREEN);
 
         if (c == 0){
-            System.out.println(ANSI_GREEN + "Exiting game..." + ANSI_RESET);
+            Logger.logLine(ANSI_CYAN, "Exiting game");
             running = false;
             return null;
         }
 
         if (c == 1 && choiceA != null) {
-            System.out.println(">>You chose 1<<");
-            System.out.println(ANSI_RESET);
+            Logger.logLine(ANSI_GREEN, ">>You chose 1<<");
             currentPiece = choiceA;
             choiceA = null;
             return currentPiece;
         } else if (c == 2 && choiceB != null) {
-            System.out.println(">>You chose 2<<");
+            Logger.logLine(ANSI_GREEN, ">>You chose 2<<");
             System.out.println(ANSI_RESET);
             currentPiece = choiceB;
             choiceB = null;
             return currentPiece;
         } else if (c == 3 && choiceC != null) {
-            System.out.println(">>You chose 3<<");
+            Logger.logLine(ANSI_GREEN, ">>You chose 3<<");
             System.out.println(ANSI_RESET);
             currentPiece = choiceC;
             choiceC = null;
@@ -174,17 +178,17 @@ public class Game {
             return;
         }
 
-        System.out.println(ANSI_PURPLE + "Choose X and Y each from 1 to " + (size) + " !" + ANSI_RESET);
+        Logger.logLine(ANSI_PURPLE, "Choose X and Y each from 1 to " + (size) + " !");
 
         //x's and y's values will be reduced by 1 on order to be placed correctly.
         //This is necessary because of how the field's coordinates are displayed for the player, beginning by 1 instead of 0 (for optical reasons)
         //while the array's indices start with 0
-        System.out.println(ANSI_WHITE + "('◪' is the anchor for X and Y position)" + ANSI_RESET);
-        System.out.println();
-        System.out.print(ANSI_PURPLE + "X position: ");
+        Logger.logLine(ANSI_WHITE, "('◪' is the anchor for X and Y position)");
+        Logger.nextLine();
+        Logger.log(ANSI_PURPLE, "X position: ");
         int y = (scanner.nextInt()) - 1;
 
-        System.out.print("Y position: " + ANSI_RESET);
+        Logger.log(ANSI_PURPLE, "Y position: ");
         int x = (scanner.nextInt()) - 1;
 
         //when picking a choice piece in the choose method, the currentPiece object will point at the choice piece's id which is used here
@@ -423,10 +427,11 @@ public class Game {
             running = false;
             System.out.println();
             gameField.printField();
-            System.out.println(ANSI_RED + "Game over!" + ANSI_RESET);
-            System.out.println(ANSI_YELLOW + "Total score: " + score + " points!" + ANSI_RESET);
+            Logger.logLine(ANSI_RED, "Game over!");
+            Logger.logLine(ANSI_YELLOW, "Total score: " + score + " points!");
+
         } else {
-            System.out.println(ANSI_YELLOW + "Total score: " + score + " points!" + ANSI_RESET);
+            Logger.logLine(ANSI_YELLOW, "Total score: " + score + " points!");
         }
     }
 

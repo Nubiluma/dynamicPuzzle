@@ -50,7 +50,6 @@ public class Game {
 
         while (running) {
             printScore();
-            Logger.nextLine();
             gameField.printField();
             updateChoices();
             choose();
@@ -83,9 +82,11 @@ public class Game {
         return random.nextInt(13); //bound is tied to amount of piece ids (12)
     }
 
-    private void printScore(){
+    private void printScore() {
         Logger.logLine(ANSI_YELLOW, ">> Score: " + score + " <<");
+        Logger.nextLine();
     }
+
     /**
      * Generates Piece objects to choose from if all choice pieces are null. A choice piece will become null if it has been picked before.
      * So, after every third round, this method will replace all three choice pieces, because they will all be null by then.
@@ -134,13 +135,13 @@ public class Game {
      */
     private Piece choose() {
 
-        Logger.logLine(ANSI_PURPLE, "Choose between 1 and 3");
-        Logger.logLine(ANSI_WHITE, " (or enter 0 to exit the game): ");
-        Logger.nextLine();
+        Logger.log(ANSI_PURPLE, "Choose between 1 and 3");
+        Logger.log(ANSI_WHITE, " (or enter 0 to exit the game): ");
 
         int c = scanner.nextInt();
+        Logger.nextLine();
 
-        if (c == 0){
+        if (c == 0) {
             Logger.logLine(ANSI_CYAN, "Exiting game");
             running = false;
             return null;
@@ -174,7 +175,7 @@ public class Game {
      */
     private void place() {
 
-        if (!running){
+        if (!running) {
             return;
         }
 
@@ -428,10 +429,9 @@ public class Game {
             System.out.println();
             gameField.printField();
             Logger.logLine(ANSI_RED, "Game over!");
-            Logger.logLine(ANSI_YELLOW, "Total score: " + score + " points!");
-
-        } else {
-            Logger.logLine(ANSI_YELLOW, "Total score: " + score + " points!");
+            Logger.logLine(ANSI_YELLOW, "Final score: " + score + " points!");
+        } else if (!running){
+            Logger.logLine(ANSI_YELLOW, "Final score: " + score + " points!");
         }
     }
 
@@ -440,7 +440,7 @@ public class Game {
      * The more rows/columns are counted at once, the higher the score (through Math.pow method)
      */
     private void evaluate() {
-        if (!running){
+        if (!running) {
             return;
         }
         int counter = countColumns() + countRows();

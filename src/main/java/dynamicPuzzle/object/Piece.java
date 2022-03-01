@@ -22,10 +22,8 @@ public class Piece {
         this.id = id;
     }
 
-    /**
-     * this method will display the choice pieces for the player when choosing turn comes
-     * '◪' represents anchor point of the piece and will not be shown on the grid when piece is placed
-     */
+    /* (this method was replaced by printChoicePieces method!)
+
     public void printPiece(Piece piece) {
 
         if (piece.getId() == square.getId()) {
@@ -88,6 +86,7 @@ public class Piece {
         }
 
     }
+    */
 
     public int getId() {
         return id;

@@ -1,12 +1,12 @@
 package dynamicPuzzle.game;
 
 import dynamicPuzzle.object.Piece;
+import dynamicPuzzle.utilities.Color;
+import dynamicPuzzle.utilities.Logger;
 
 public class Field {
 
     public static Piece[][] field;
-
-    public static final String ANSI_WHITE = "\u001B[37m";
 
     public Field(int size) {
         field = new Piece[size][size];
@@ -23,22 +23,22 @@ public class Field {
     public void printField() {
 
         //for formatting reasons
-        System.out.print("  ");
+        Logger.log("  ");
 
         for (int i = 0; i < field.length; i++) {
-            System.out.print(i + 1 + " ");
+            Logger.log(i + 1 + " ");
         }
 
         //coordinate 'x'
-        Logger.logLine(ANSI_WHITE, "x");
+        Logger.logLine(Color.WHITE.colorCode, "x");
 
         for (int i = 0; i < field.length; i++) {
-            System.out.print(i + 1 + " ");
+            Logger.log(i + 1 + " ");
             for (int j = 0; j < field.length; j++) {
                 if (field[i][j] == null) {
-                    System.out.print("□ ");
+                    Logger.log("□ ");
                 } else {
-                    System.out.print("■ ");
+                    Logger.log("■ ");
                 }
 
             }
@@ -46,8 +46,7 @@ public class Field {
             Logger.nextLine();
         }
         //coordinate 'y'
-        Logger.logLine(ANSI_WHITE, "y");
-        Logger.nextLine();
+        Logger.logLine(Color.WHITE.colorCode, "y");
     }
 
 }

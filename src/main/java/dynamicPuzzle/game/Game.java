@@ -1,11 +1,13 @@
 package dynamicPuzzle.game;
 
 import dynamicPuzzle.object.Piece;
+import dynamicPuzzle.utilities.Color;
+import dynamicPuzzle.utilities.Input;
+import dynamicPuzzle.utilities.Logger;
 
 import static dynamicPuzzle.game.Field.getField;
 
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 public class Game {
 
@@ -14,15 +16,6 @@ public class Game {
     private final boolean[][] marker;
     private boolean running;
     private int score = 0;
-
-    //For console output coloration
-    public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_RED = "\u001B[31m";
-    public static final String ANSI_GREEN = "\u001B[32m";
-    public static final String ANSI_YELLOW = "\u001B[33m";
-    public static final String ANSI_PURPLE = "\u001B[35m";
-    public static final String ANSI_WHITE = "\u001B[37m";
-    public static final String ANSI_CYAN = "\u001B[36m";
 
     private static Scanner scanner;
     private final Random random = new Random();
@@ -51,7 +44,7 @@ public class Game {
         while (running) {
             printScore();
             gameField.printField();
-            updateChoices();
+            printChoices();
             choose();
             place();
             evaluate();
@@ -83,7 +76,7 @@ public class Game {
     }
 
     private void printScore() {
-        Logger.logLine(ANSI_YELLOW, ">> Score: " + score + " <<");
+        Logger.logLine(Color.YELLOW.colorCode, ">> Score: " + score + " <<");
         Logger.nextLine();
     }
 
@@ -98,33 +91,157 @@ public class Game {
             choiceA = new Piece(getRandomID());
             choiceB = new Piece(getRandomID());
             choiceC = new Piece(getRandomID());
-
         }
 
-        System.out.println("1: ");
-        if (choiceA != null) {
-            choiceA.printPiece(choiceA);
-        } else {
-            System.out.println("-");
-            System.out.println();
+    }
+
+    /**
+     * this method will display the choice pieces for the player when choosing turn comes
+     * '◪' represents anchor point of the piece and will not be shown on the grid when piece is placed
+     */
+    private void printChoices() {
+
+        updateChoices();
+
+        List<Piece> choices = Arrays.asList(choiceA, choiceB, choiceC);
+
+        int lengthI = 11;
+        int lengthJ = 3;
+        int index = 0;
+        int j = 0;
+
+        boolean[][] isAnchor = new boolean[lengthI][lengthJ];
+        Piece[][] choicePieces = new Piece[lengthI][lengthJ];
+
+        for (int i = 0; i < lengthI; i += 4) {
+
+            if (choices.get(index) != null) {
+
+                switch (choices.get(index).getId()) {
+                    case 0 -> { //square
+                        isAnchor[i][j] = true;
+
+                        choicePieces[i][j] = piece;
+                        choicePieces[i][j + 1] = piece;
+                        choicePieces[i + 1][j] = piece;
+                        choicePieces[i + 1][j + 1] = piece;
+                    }
+                    case 1 -> { //column2
+                        isAnchor[i][j] = true;
+
+                        choicePieces[i][j] = piece;
+                        choicePieces[i][j + 1] = piece;
+                    }
+                    case 2 -> { //column3
+                        isAnchor[i][j] = true;
+
+                        choicePieces[i][j] = piece;
+                        choicePieces[i][j + 1] = piece;
+                        choicePieces[i][j + 2] = piece;
+                    }
+                    case 3 -> { //wall2
+                        isAnchor[i][j] = true;
+
+                        choicePieces[i][j] = piece;
+                        choicePieces[i + 1][j] = piece;
+                    }
+                    case 4 -> { //wall3
+                        isAnchor[i][j] = true;
+
+                        choicePieces[i][j] = piece;
+                        choicePieces[i + 1][j] = piece;
+                        choicePieces[i + 2][j] = piece;
+                    }
+                    case 5 -> { //lLeft
+                        isAnchor[i + 1][j] = true;
+
+                        choicePieces[i + 1][j] = piece;
+                        choicePieces[i + 1][j + 1] = piece;
+                        choicePieces[i + 1][j + 1] = piece;
+                        choicePieces[i][j + 2] = piece;
+                    }
+                    case 6 -> { //lRight
+                        isAnchor[i][j] = true;
+
+                        choicePieces[i][j] = piece;
+                        choicePieces[i][j + 1] = piece;
+                        choicePieces[i][j + 2] = piece;
+                        choicePieces[i + 1][j + 2] = piece;
+                    }
+                    case 7 -> { //lUpLeft
+                        isAnchor[i][j] = true;
+
+                        choicePieces[i][j] = piece;
+                        choicePieces[i + 1][j] = piece;
+                        choicePieces[i + 1][j + 1] = piece;
+                        choicePieces[i + 1][j + 2] = piece;
+                    }
+                    case 8 -> { //lUpRight
+                        isAnchor[i][j] = true;
+
+                        choicePieces[i][j] = piece;
+                        choicePieces[i + 1][j] = piece;
+                        choicePieces[i][j + 1] = piece;
+                        choicePieces[i][j + 2] = piece;
+                    }
+                    case 9 -> { //zLeft
+                        isAnchor[i][j] = true;
+
+                        choicePieces[i][j] = piece;
+                        choicePieces[i + 1][j] = piece;
+                        choicePieces[i + 1][j + 1] = piece;
+                        choicePieces[i + 2][j + 1] = piece;
+                    }
+                    case 10 -> { //zRight
+                        isAnchor[i + 1][j] = true;
+
+                        choicePieces[i + 1][j] = piece;
+                        choicePieces[i + 2][j] = piece;
+                        choicePieces[i][j + 1] = piece;
+                        choicePieces[i + 1][j + 1] = piece;
+                    }
+                    case 11 -> { //zUpLeft
+                        isAnchor[i][j] = true;
+
+                        choicePieces[i][j] = piece;
+                        choicePieces[i][j + 1] = piece;
+                        choicePieces[i + 1][j + 1] = piece;
+                        choicePieces[i + 1][j + 2] = piece;
+                    }
+                    case 12 -> { //zUpRight
+                        isAnchor[i + 1][j] = true;
+
+                        choicePieces[i + 1][j] = piece;
+                        choicePieces[i + 1][j + 1] = piece;
+                        choicePieces[i][j + 1] = piece;
+                        choicePieces[i][j + 2] = piece;
+                    }
+                }
+
+            }
+
+            index++;
         }
 
-        System.out.println("2: ");
-        if (choiceB != null) {
-            choiceB.printPiece(choiceB);
-        } else {
-            System.out.println("-");
-            System.out.println();
+        Logger.nextLine();
+        Logger.logLine("1:      2:      3:");
+
+        for (j = 0; j < lengthJ; j++) {
+
+            for (int i = 0; i < lengthI; i++) {
+                if (choicePieces[i][j] != null && isAnchor[i][j]) {
+                    Logger.log("◪ ");
+                } else if (choicePieces[i][j] != null) {
+                    Logger.log("■ ");
+                } else if (choicePieces[i][j] == null) {
+                    Logger.log("  ");
+                }
+
+            }
+            Logger.nextLine();
         }
 
-        System.out.println("3: ");
-        if (choiceC != null) {
-            choiceC.printPiece(choiceC);
-        } else {
-            System.out.println("-");
-            System.out.println();
-        }
-
+        Logger.nextLine();
     }
 
     /**
@@ -135,37 +252,45 @@ public class Game {
      */
     private Piece choose() {
 
-        Logger.log(ANSI_PURPLE, "Choose between 1 and 3");
-        Logger.log(ANSI_WHITE, " (or enter 0 to exit the game): ");
+        Logger.log(Color.PURPLE.colorCode, "Choose between 1 and 3");
+        Logger.log(Color.WHITE.colorCode, " (or enter 0 to exit the game): ");
 
-        int c = scanner.nextInt();
+        int input = Input.inputInt(scanner);
         Logger.nextLine();
 
-        if (c == 0) {
-            Logger.logLine(ANSI_CYAN, "Exiting game");
+        if (input == 0) {
+            Logger.logLine(Color.CYAN.colorCode, "You chose to exit the game");
             running = false;
             return null;
         }
 
-        if (c == 1 && choiceA != null) {
-            Logger.logLine(ANSI_GREEN, ">>You chose 1<<");
+        if (input == 1 && choiceA != null) {
+            Logger.logLine(Color.GREEN.colorCode, ">>You chose 1<<");
             currentPiece = choiceA;
             choiceA = null;
             return currentPiece;
-        } else if (c == 2 && choiceB != null) {
-            Logger.logLine(ANSI_GREEN, ">>You chose 2<<");
-            System.out.println(ANSI_RESET);
+        } else if (input == 1) {
+            Logger.logLine(Color.RED.colorCode, "This choice piece is not available right now!");
+        }
+        if (input == 2 && choiceB != null) {
+            Logger.logLine(Color.GREEN.colorCode, ">>You chose 2<<");
             currentPiece = choiceB;
             choiceB = null;
             return currentPiece;
-        } else if (c == 3 && choiceC != null) {
-            Logger.logLine(ANSI_GREEN, ">>You chose 3<<");
-            System.out.println(ANSI_RESET);
+        } else if (input == 2) {
+            Logger.logLine(Color.RED.colorCode, "This choice piece is not available right now!");
+        }
+        if (input == 3 && choiceC != null) {
+            Logger.logLine(Color.GREEN.colorCode, ">>You chose 3<<");
             currentPiece = choiceC;
             choiceC = null;
             return currentPiece;
+        } else if (input == 3) {
+            Logger.logLine(Color.RED.colorCode, "This choice piece is not available right now!");
         }
 
+        Logger.logLine(Color.RED.colorCode, "You need to choose between 1 and 3!");
+        Logger.nextLine();
         return choose();
 
     }
@@ -179,23 +304,22 @@ public class Game {
             return;
         }
 
-        Logger.logLine(ANSI_PURPLE, "Choose X and Y each from 1 to " + (size) + " !");
+        Logger.logLine(Color.PURPLE.colorCode, "Choose X and Y each from 1 to " + (size) + "!");
 
         //x's and y's values will be reduced by 1 on order to be placed correctly.
         //This is necessary because of how the field's coordinates are displayed for the player, beginning by 1 instead of 0 (for optical reasons)
         //while the array's indices start with 0
-        Logger.logLine(ANSI_WHITE, "('◪' is the anchor for X and Y position)");
+        Logger.logLine(Color.WHITE.colorCode, "('◪' is the anchor for X and Y position)");
         Logger.nextLine();
-        Logger.log(ANSI_PURPLE, "X position: ");
-        int y = (scanner.nextInt()) - 1;
+        Logger.log(Color.PURPLE.colorCode, "X position: ");
 
-        Logger.log(ANSI_PURPLE, "Y position: ");
-        int x = (scanner.nextInt()) - 1;
+        int y = Input.inputInt(scanner) - 1;
+
+        Logger.log(Color.PURPLE.colorCode, "Y position: ");
+        int x = Input.inputInt(scanner) - 1;
 
         //when picking a choice piece in the choose method, the currentPiece object will point at the choice piece's id which is used here
         int id = currentPiece.getId();
-
-        System.out.println(ANSI_RED); //following system outputs in this method will only show when running into an error (can all be formatted the same)
 
         switch (id) {
             //square:
@@ -207,11 +331,11 @@ public class Game {
                         getField()[x][y + 1] = piece;
                         getField()[x + 1][y + 1] = piece;
                     } else {
-                        System.out.println("Not enough space!");
+                        Logger.logLine(Color.RED.colorCode, "Not enough space!");
                         place();
                     }
                 } else {
-                    System.out.println("Out of bounds or not enough space!");
+                    Logger.logLine(Color.RED.colorCode, "Out of bounds or not enough space!");
                     place();
                 }
                 break;
@@ -222,11 +346,11 @@ public class Game {
                         getField()[x][y] = piece;
                         getField()[x + 1][y] = piece;
                     } else {
-                        System.out.println("Not enough space!");
+                        Logger.logLine(Color.RED.colorCode, "Not enough space!");
                         place();
                     }
                 } else {
-                    System.out.println("Out of bounds or not enough space!");
+                    Logger.logLine(Color.RED.colorCode, "Out of bounds or not enough space!");
                     place();
                 }
                 break;
@@ -238,11 +362,11 @@ public class Game {
                         getField()[x + 1][y] = piece;
                         getField()[x + 2][y] = piece;
                     } else {
-                        System.out.println("Not enough space!");
+                        Logger.logLine(Color.RED.colorCode, "Not enough space!");
                         place();
                     }
                 } else {
-                    System.out.println("Out of bounds or not enough space!");
+                    Logger.logLine(Color.RED.colorCode, "Out of bounds or not enough space!");
                     place();
                 }
                 break;
@@ -253,11 +377,11 @@ public class Game {
                         getField()[x][y] = piece;
                         getField()[x][y + 1] = piece;
                     } else {
-                        System.out.println("Not enough space!");
+                        Logger.logLine(Color.RED.colorCode, "Not enough space!");
                         place();
                     }
                 } else {
-                    System.out.println("Out of bounds or not enough space!");
+                    Logger.logLine(Color.RED.colorCode, "Out of bounds or not enough space!");
                     place();
                 }
                 break;
@@ -269,11 +393,11 @@ public class Game {
                         getField()[x][y + 1] = piece;
                         getField()[x][y + 2] = piece;
                     } else {
-                        System.out.println("Not enough space!");
+                        Logger.logLine(Color.RED.colorCode, "Not enough space!");
                         place();
                     }
                 } else {
-                    System.out.println("Out of bounds or not enough space!");
+                    Logger.logLine(Color.RED.colorCode, "Out of bounds or not enough space!");
                     place();
                 }
                 break;
@@ -286,11 +410,11 @@ public class Game {
                         getField()[x + 2][y] = piece;
                         getField()[x + 2][y - 1] = piece;
                     } else {
-                        System.out.println("Not enough space!");
+                        Logger.logLine(Color.RED.colorCode, "Not enough space!");
                         place();
                     }
                 } else {
-                    System.out.println("Out of bounds or not enough space!");
+                    Logger.logLine(Color.RED.colorCode, "Out of bounds or not enough space!");
                     place();
                 }
                 break;
@@ -303,11 +427,11 @@ public class Game {
                         getField()[x + 2][y] = piece;
                         getField()[x + 2][y + 1] = piece;
                     } else {
-                        System.out.println("Not enough space!");
+                        Logger.logLine(Color.RED.colorCode, "Not enough space!");
                         place();
                     }
                 } else {
-                    System.out.println("Out of bounds or not enough space!");
+                    Logger.logLine(Color.RED.colorCode, "Out of bounds or not enough space!");
                     place();
                 }
                 break;
@@ -320,11 +444,11 @@ public class Game {
                         getField()[x + 1][y + 1] = piece;
                         getField()[x + 2][y + 1] = piece;
                     } else {
-                        System.out.println("Not enough space!");
+                        Logger.logLine(Color.RED.colorCode, "Not enough space!");
                         place();
                     }
                 } else {
-                    System.out.println("Out of bounds or not enough space!");
+                    Logger.logLine(Color.RED.colorCode, "Out of bounds or not enough space!");
                     place();
                 }
                 break;
@@ -337,11 +461,11 @@ public class Game {
                         getField()[x + 2][y] = piece;
                         getField()[x][y + 1] = piece;
                     } else {
-                        System.out.println("Not enough space!");
+                        Logger.logLine(Color.RED.colorCode, "Not enough space!");
                         place();
                     }
                 } else {
-                    System.out.println("Out of bounds or not enough space!");
+                    Logger.logLine(Color.RED.colorCode, "Out of bounds or not enough space!");
                     place();
                 }
                 break;
@@ -354,11 +478,11 @@ public class Game {
                         getField()[x + 1][y + 1] = piece;
                         getField()[x + 1][y + 2] = piece;
                     } else {
-                        System.out.println("Not enough space!");
+                        Logger.logLine(Color.RED.colorCode, "Not enough space!");
                         place();
                     }
                 } else {
-                    System.out.println("Out of bounds or not enough space!");
+                    Logger.logLine(Color.RED.colorCode, "Out of bounds or not enough space!");
                     place();
                 }
                 break;
@@ -371,11 +495,11 @@ public class Game {
                         getField()[x + 1][y - 1] = piece;
                         getField()[x + 1][y] = piece;
                     } else {
-                        System.out.println("Not enough space!");
+                        Logger.logLine(Color.RED.colorCode, "Not enough space!");
                         place();
                     }
                 } else {
-                    System.out.println("Out of bounds or not enough space!");
+                    Logger.logLine(Color.RED.colorCode, "Out of bounds or not enough space!");
                     place();
                 }
                 break;
@@ -388,11 +512,11 @@ public class Game {
                         getField()[x + 1][y + 1] = piece;
                         getField()[x + 2][y + 1] = piece;
                     } else {
-                        System.out.println("Not enough space!");
+                        Logger.logLine(Color.RED.colorCode, "Not enough space!");
                         place();
                     }
                 } else {
-                    System.out.println("Out of bounds or not enough space!");
+                    Logger.logLine(Color.RED.colorCode, "Out of bounds or not enough space!");
                     place();
                 }
                 break;
@@ -405,11 +529,11 @@ public class Game {
                         getField()[x + 1][y - 1] = piece;
                         getField()[x + 2][y - 1] = piece;
                     } else {
-                        System.out.println("Not enough space!");
+                        Logger.logLine(Color.RED.colorCode, "Not enough space!");
                         place();
                     }
                 } else {
-                    System.out.println("Out of bounds or not enough space!");
+                    Logger.logLine(Color.RED.colorCode, "Out of bounds or not enough space!");
                     place();
                 }
                 break;
@@ -418,7 +542,6 @@ public class Game {
         //'clear' currentPiece
         currentPiece = null;
 
-        System.out.print(ANSI_RESET);
         updateChoices();
     }
 
@@ -426,12 +549,12 @@ public class Game {
 
         if (!gameFieldHasSpace() && running) {
             running = false;
-            System.out.println();
+            Logger.nextLine();
             gameField.printField();
-            Logger.logLine(ANSI_RED, "Game over!");
-            Logger.logLine(ANSI_YELLOW, "Final score: " + score + " points!");
-        } else if (!running){
-            Logger.logLine(ANSI_YELLOW, "Final score: " + score + " points!");
+            Logger.logLine(Color.RED.colorCode, "Game over!");
+            Logger.logLine(Color.YELLOW.colorCode, "Final score: " + score + " points!");
+        } else if (!running) {
+            Logger.logLine(Color.YELLOW.colorCode, "Final score: " + score + " points!");
         }
     }
 

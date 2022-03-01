@@ -6,9 +6,9 @@ import java.util.Scanner;
 public class Input {
 
     public static int inputInt(Scanner keyboard) {
-        try{
+        try {
             return keyboard.nextInt();
-        } catch (InputMismatchException e){
+        } catch (InputMismatchException e) {
             Logger.logLine("Input invalid. You need to input a number!");
             keyboard.next();
             return inputInt(keyboard);

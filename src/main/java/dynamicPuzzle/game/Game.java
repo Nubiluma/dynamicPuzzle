@@ -75,6 +75,9 @@ public class Game {
         return random.nextInt(13); //bound is tied to amount of piece ids (12)
     }
 
+    /**
+     *
+     */
     private void printScore() {
         Logger.logLine(Color.YELLOW.colorCode, ">> Score: " + score + " <<");
         Logger.nextLine();
@@ -110,9 +113,16 @@ public class Game {
         int index = 0;
         int j = 0;
 
-        boolean[][] isAnchor = new boolean[lengthI][lengthJ];
+        /*
+         * In order to get the choice pieces displayed next to each other, they have to be put in a 2d array (like a buffer).
+         * The boolean array 'isAnchor' is necessary for the display of anchor pieces (◪)
+         */
         Piece[][] choicePieces = new Piece[lengthI][lengthJ];
+        boolean[][] isAnchor = new boolean[lengthI][lengthJ];
 
+        /*
+         * 'i' is iterated by 4 to leave 'space' between displayed pieces when printed
+         */
         for (int i = 0; i < lengthI; i += 4) {
 
             if (choices.get(index) != null) {
@@ -258,6 +268,9 @@ public class Game {
         int input = Input.inputInt(scanner);
         Logger.nextLine();
 
+        /*
+         * Exits the game by setting running to false, ending game loop before next round
+         */
         if (input == 0) {
             Logger.logLine(Color.CYAN.colorCode, "You chose to exit the game");
             running = false;
@@ -300,15 +313,20 @@ public class Game {
      */
     private void place() {
 
+        /*
+         * Prevents following method body to be executed unnecessarily as the game is in the process of exiting if true
+         */
         if (!running) {
             return;
         }
 
         Logger.logLine(Color.PURPLE.colorCode, "Choose X and Y each from 1 to " + (size) + "!");
 
-        //x's and y's values will be reduced by 1 on order to be placed correctly.
-        //This is necessary because of how the field's coordinates are displayed for the player, beginning by 1 instead of 0 (for optical reasons)
-        //while the array's indices start with 0
+        /*
+         * x's and y's values will be reduced by 1 on order to be placed correctly.
+         * This is necessary because of how the field's coordinates are displayed for the player, beginning by 1 instead of 0 (for optical reasons)
+         * while the array's indices start with 0
+         */
         Logger.logLine(Color.WHITE.colorCode, "('◪' is the anchor for X and Y position)");
         Logger.nextLine();
         Logger.log(Color.PURPLE.colorCode, "X position: ");
@@ -318,7 +336,9 @@ public class Game {
         Logger.log(Color.PURPLE.colorCode, "Y position: ");
         int x = Input.inputInt(scanner) - 1;
 
-        //when picking a choice piece in the choose method, the currentPiece object will point at the choice piece's id which is used here
+        /*
+         * when picking a choice piece in the choose method, the currentPiece object will point at the choice piece's id which is used here
+         */
         int id = currentPiece.getId();
 
         switch (id) {
@@ -539,12 +559,15 @@ public class Game {
                 break;
         }
 
-        //'clear' currentPiece
+
         currentPiece = null;
 
         updateChoices();
     }
 
+    /**
+     * method will stop game loop if remaining choice pieces are not able to be placed on game field
+     */
     private void checkForLose() {
 
         if (!gameFieldHasSpace() && running) {

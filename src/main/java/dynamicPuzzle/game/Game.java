@@ -2,6 +2,7 @@ package dynamicPuzzle.game;
 
 import dynamicPuzzle.object.Piece;
 import dynamicPuzzle.utilities.Color;
+import dynamicPuzzle.utilities.Highscore;
 import dynamicPuzzle.utilities.Input;
 import dynamicPuzzle.utilities.Logger;
 
@@ -75,10 +76,8 @@ public class Game {
         return random.nextInt(13); //bound is tied to amount of piece ids (12)
     }
 
-    /**
-     *
-     */
     private void printScore() {
+        Logger.nextLine();
         Logger.logLine(Color.YELLOW.colorCode, ">> Score: " + score + " <<");
         Logger.nextLine();
     }
@@ -273,6 +272,7 @@ public class Game {
          */
         if (input == 0) {
             Logger.logLine(Color.CYAN.colorCode, "You chose to exit the game");
+            Logger.nextLine();
             running = false;
             return null;
         }
@@ -576,8 +576,10 @@ public class Game {
             gameField.printField();
             Logger.logLine(Color.RED.colorCode, "Game over!");
             Logger.logLine(Color.YELLOW.colorCode, "Final score: " + score + " points!");
+            Highscore highscore = new Highscore(score);
         } else if (!running) {
             Logger.logLine(Color.YELLOW.colorCode, "Final score: " + score + " points!");
+            Highscore highscore = new Highscore(score);
         }
     }
 
